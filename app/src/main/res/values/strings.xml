@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Agunay</string>
+    <string name="app_name">QuizzWalker</string>
+    <string name="alertdialog_confirmbutton">are you sure?</string>
 </resources>
