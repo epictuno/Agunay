@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">QuizzWalker</string>
     <string name="alertdialog_confirmbutton">are you sure?</string>
+    <string name="steps_button">Pasos</string>
+    <string name="trivia_button">Trivia</string>
+    <string name="shop_button">Tienda</string>
+    <string name="settings_button">Ajustes</string>
+    <string name="profile_button">Perfil de usuario</string>
+    <string name="info_button">Información sobre la aplicación</string>
+    <string name="bottom_text">Creado por PacoCorp y sus comparsas</string>
 </resources>
