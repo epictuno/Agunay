@@ -3,12 +3,14 @@ package com.project.agunay.adapter.kotlin.components
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +24,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.filled.*
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -30,6 +33,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxColors
@@ -427,7 +431,9 @@ fun ChatBox(onSend: (String) -> Unit, modifier: Modifier) {
                 imageVector = Icons.Filled.Send,
                 contentDescription = "Send",
                 tint = Color.White,
-                modifier = Modifier.fillMaxSize().padding(8.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp)
             )
         }
     }
@@ -576,7 +582,9 @@ fun AchievementCard(
             //painter = painterResource(id = R.drawable.default_profile_pic),
             contentDescription = "Achievement image",
             modifier = Modifier.size(60.dp))
-        Column(modifier = Modifier.fillMaxWidth().padding(10.dp), horizontalAlignment = Alignment.Start){
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp), horizontalAlignment = Alignment.Start){
             Text(text = title, color = Color.Black, fontSize = 20.sp)
             Text(text = description, color = Color.Black, fontSize = 16.sp)
         }
@@ -647,4 +655,81 @@ fun AchievementDialog(achievementImage: Painter, title: String, description: Str
             }
         }
     }
+}
+
+@Composable
+fun WalkQuizSquareButton(
+    onClick: () -> Unit,
+    icon: Int,
+    @StringRes text: Int,
+    contentDescription: String = ""
+) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(containerColor = LightGrey),
+        modifier = Modifier
+            .width(256.dp)
+            .padding(0.dp, 8.dp)
+    ) {
+        Icon(
+            painterResource(icon),
+            contentDescription = contentDescription,
+            tint = Color.Black,
+            modifier = Modifier.size(48.dp)
+        )
+        Text(
+            text = stringResource(text),
+            modifier = Modifier.padding(4.dp),
+            fontSize = 24.sp,
+            color = Color.Black
+        )
+    }
+}
+
+@Composable
+fun WalkQuizRoundButton(
+    onClick: () -> Unit,
+    icon: Int,
+    contentDescription: String
+) {
+    Button(
+        shape = CircleShape,
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(containerColor = LightGrey)
+    ) { 
+        Icon(
+            painterResource(icon),
+            contentDescription = contentDescription,
+            tint = Color.Black,
+            modifier = Modifier.size(48.dp)
+        )
+    }
+}
+
+@Composable
+fun BottomButtons() {
+    Row(
+        horizontalArrangement = Arrangement.SpaceAround,
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        WalkQuizRoundButton(
+            onClick = {},
+            icon = R.drawable.account,
+            contentDescription = stringResource(R.string.profile_button),
+        )
+        WalkQuizRoundButton(
+            onClick = {},
+            icon = R.drawable.info,
+            contentDescription = stringResource(R.string.info_button)
+        )
+    }
+}
+
+@Composable
+fun BottomText() {
+    Text(
+        text = stringResource(R.string.bottom_text),
+        color = Color.White
+    )
 }
