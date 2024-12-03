@@ -58,30 +58,31 @@ fun TriviaScreen() {
 
 @Composable
 fun AnswerButtons(modifier: Modifier = Modifier) {
+    val buttonWidth = 350.dp
     Column {
         WalkQuizSquareButtonWithImage(
             onClick = {},
             image = R.drawable.option_a,
             text = "Opción A",
-            width = 350.dp
+            width = buttonWidth
         )
         WalkQuizSquareButtonWithImage(
             onClick = {},
             image = R.drawable.option_b,
             text = "Opción B",
-            width = 350.dp
+            width = buttonWidth
         )
         WalkQuizSquareButtonWithImage(
             onClick = {},
             image = R.drawable.option_c,
             text = "Opción C",
-            width = 350.dp
+            width = buttonWidth
         )
         WalkQuizSquareButtonWithImage(
             onClick = {},
             image = R.drawable.option_d,
             text = "Opción D",
-            width = 350.dp
+            width = buttonWidth
         )
     }
 }
