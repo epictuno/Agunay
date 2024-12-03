@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.filled.*
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -35,11 +34,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -49,6 +51,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -79,6 +82,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -658,17 +662,18 @@ fun AchievementDialog(achievementImage: Painter, title: String, description: Str
 }
 
 @Composable
-fun WalkQuizSquareButton(
+fun WalkQuizSquareButtonWithIcon(
     onClick: () -> Unit,
     icon: Int,
-    @StringRes text: Int,
-    contentDescription: String = ""
+    text: String,
+    contentDescription: String = "",
+    width: Dp = 256.dp
 ) {
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(containerColor = LightGrey),
         modifier = Modifier
-            .width(256.dp)
+            .width(width)
             .padding(0.dp, 8.dp)
     ) {
         Icon(
@@ -678,7 +683,36 @@ fun WalkQuizSquareButton(
             modifier = Modifier.size(48.dp)
         )
         Text(
-            text = stringResource(text),
+            text = text,
+            modifier = Modifier.padding(4.dp),
+            fontSize = 24.sp,
+            color = Color.Black
+        )
+    }
+}
+
+@Composable
+fun WalkQuizSquareButtonWithImage(
+    onClick: () -> Unit,
+    image: Int,
+    text: String,
+    contentDescription: String = "",
+    width: Dp = 256.dp
+) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(containerColor = LightGrey),
+        modifier = Modifier
+            .width(width)
+            .padding(0.dp, 8.dp)
+    ) {
+        Image(
+            painterResource(image),
+            contentDescription = contentDescription,
+            modifier = Modifier.size(48.dp)
+        )
+        Text(
+            text = text,
             modifier = Modifier.padding(4.dp),
             fontSize = 24.sp,
             color = Color.Black
@@ -692,10 +726,10 @@ fun WalkQuizRoundButton(
     icon: Int,
     contentDescription: String
 ) {
-    Button(
-        shape = CircleShape,
+    IconButton(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = LightGrey)
+        colors = IconButtonDefaults.iconButtonColors(containerColor = LightGrey),
+        modifier = Modifier.size(64.dp)
     ) { 
         Icon(
             painterResource(icon),
@@ -731,5 +765,41 @@ fun BottomText() {
     Text(
         text = stringResource(R.string.bottom_text),
         color = Color.White
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WalkQuizTopBar(
+    @StringRes text: Int,
+    icon: Int
+) {
+    CenterAlignedTopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color(0xFF9B9B9B),
+            titleContentColor = Color.Black
+        ),
+        title = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(icon),
+                    contentDescription = "",
+                    modifier = Modifier.size(48.dp)
+                )
+                Text(
+                    text = stringResource(text),
+                    fontSize = 32.sp
+                )
+            }
+        },
+        navigationIcon = {
+            WalkQuizRoundButton(
+                onClick = {},
+                icon = R.drawable.left_arrow,
+                contentDescription = stringResource(R.string.back_button)
+            )
+        }
     )
 }

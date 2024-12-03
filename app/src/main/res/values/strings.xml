@@ -8,4 +8,6 @@
     <string name="profile_button">Perfil de usuario</string>
     <string name="info_button">Información sobre la aplicación</string>
     <string name="bottom_text">Creado por PacoCorp y sus comparsas</string>
+    <string name="back_button">Regresar</string>
+    <string name="use_object_button">Usar objeto</string>
 </resources>

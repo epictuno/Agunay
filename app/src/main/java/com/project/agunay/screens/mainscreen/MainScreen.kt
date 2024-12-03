@@ -9,12 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.project.agunay.R
 import com.project.agunay.adapter.kotlin.components.BottomButtons
 import com.project.agunay.adapter.kotlin.components.BottomText
-import com.project.agunay.adapter.kotlin.components.WalkQuizSquareButton
+import com.project.agunay.adapter.kotlin.components.WalkQuizSquareButtonWithIcon
 
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
@@ -40,25 +41,25 @@ fun MainScreenButtons() {
         modifier = Modifier
             .padding(0.dp, 16.dp)
     ) {
-        WalkQuizSquareButton(
+        WalkQuizSquareButtonWithIcon(
             onClick = {},
             icon = R.drawable.step,
-            text = R.string.steps_button
+            text = stringResource(R.string.steps_button)
         )
-        WalkQuizSquareButton(
+        WalkQuizSquareButtonWithIcon(
             onClick = {},
             icon = R.drawable.trivia,
-            text = R.string.trivia_button
+            text = stringResource(R.string.trivia_button)
         )
-        WalkQuizSquareButton(
+        WalkQuizSquareButtonWithIcon(
             onClick = {},
             icon = R.drawable.shop,
-            text = R.string.shop_button
+            text = stringResource(R.string.shop_button)
         )
-        WalkQuizSquareButton(
+        WalkQuizSquareButtonWithIcon(
             onClick = {},
             icon = R.drawable.settings,
-            text = R.string.settings_button
+            text = stringResource(R.string.settings_button)
         )
     }
 }
