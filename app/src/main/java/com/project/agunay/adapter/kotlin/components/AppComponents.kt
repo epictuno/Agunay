@@ -3,6 +3,7 @@ package com.project.agunay.adapter.kotlin.components
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
@@ -664,7 +665,7 @@ fun AchievementDialog(achievementImage: Painter, title: String, description: Str
 @Composable
 fun WalkQuizSquareButtonWithIcon(
     onClick: () -> Unit,
-    icon: Int,
+    @DrawableRes icon: Int,
     text: String,
     contentDescription: String = "",
     width: Dp = 256.dp
@@ -694,7 +695,7 @@ fun WalkQuizSquareButtonWithIcon(
 @Composable
 fun WalkQuizSquareButtonWithImage(
     onClick: () -> Unit,
-    image: Int,
+    @DrawableRes image: Int,
     text: String,
     contentDescription: String = "",
     width: Dp = 256.dp
@@ -723,7 +724,7 @@ fun WalkQuizSquareButtonWithImage(
 @Composable
 fun WalkQuizRoundButton(
     onClick: () -> Unit,
-    icon: Int,
+    @DrawableRes icon: Int,
     contentDescription: String
 ) {
     IconButton(
@@ -772,7 +773,7 @@ fun BottomText() {
 @Composable
 fun WalkQuizTopBar(
     @StringRes text: Int,
-    icon: Int
+    @DrawableRes icon: Int
 ) {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(

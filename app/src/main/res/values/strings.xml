@@ -12,4 +12,8 @@
     <string name="use_object_button">Usar objeto</string>
     <string name="steps_today">Pasos hoy: %d</string>
     <string name="points">Puntos: %d</string>
+    <string name="profile">Perfil</string>
+    <string name="profile_picture">Foto de perfil</string>
+    <string name="achievements">%d de %d logros obtenidos</string>
+    <string name="ach_icon">Icono de logro</string>
 </resources>
