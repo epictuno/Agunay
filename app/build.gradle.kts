@@ -46,6 +46,23 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "google/firestore/v1/query.proto"
+            excludes += "google/protobuf/type.proto"
+            excludes += "google/firestore/v1/document.proto"
+            excludes += "google/firestore/v1/bloom_filter.proto"
+            excludes += "google/firestore/v1/firestore.proto"
+            excludes += "google/protobuf/timestamp.proto"
+            excludes += "google/firestore/v1/common.proto"
+            excludes += "google/protobuf/duration.proto"
+            excludes += "google/protobuf/empty.proto"
+            excludes += "META-INF/io.netty.versions.properties"
+            excludes += "google/protobuf/struct.proto"
+            excludes += "google/protobuf/field_mask.proto"
+            excludes += "mozilla/public-suffix-list.txt"
+            excludes += "google/protobuf/wrappers.proto"
+            excludes += "google/firestore/v1/aggregation_result.proto"
+            excludes += "META-INF/INDEX.LIST"
+            excludes += "META-INF/DEPENDENCIES"
         }
     }
 }
@@ -69,8 +86,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.material.icons.extended)
-    implementation(libs.firebase.admin)
+    implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
-    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.storage)
+    //implementation(libs.firebase.admin)
 }
