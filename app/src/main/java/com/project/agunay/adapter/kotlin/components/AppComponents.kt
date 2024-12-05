@@ -35,6 +35,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxColors
@@ -803,4 +804,43 @@ fun WalkQuizTopBar(
             )
         }
     )
+}
+
+@Composable
+fun ShopElement(
+    @DrawableRes image: Int,
+    name: String,
+    rightButtonText: String,
+    onRightButtonClick: () -> Unit,
+) {
+    val fontSize = 12.sp
+    Card {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Image(
+                painter = painterResource(image),
+                contentDescription = name,
+                modifier = Modifier.size(64.dp)
+            )
+            Text(
+                text = name,
+                fontSize = fontSize
+            )
+            Row {
+                Button(
+                    onClick = {},
+                    modifier = Modifier
+                        .padding(1.dp)
+                ) {
+                    Text(stringResource(R.string.shop_element_details), fontSize = fontSize)
+                }
+                Button(
+                    onClick = onRightButtonClick,
+                ) {
+                    Text(rightButtonText, fontSize = fontSize)
+                }
+            }
+        }
+    }
 }

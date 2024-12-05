@@ -151,7 +151,7 @@ fun AchievementList(
             AchievementInfo("Cagliostro es magordito", R.drawable.placeholder)
         }
     }
-    //"Implementar que los elementos AchievementInfo se creen a partir de una lista de logros")
+    //Implementar que los elementos AchievementInfo se creen a partir de una lista de logros
 }
 
 @Composable

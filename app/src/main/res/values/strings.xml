@@ -16,4 +16,6 @@
     <string name="profile_picture">Foto de perfil</string>
     <string name="achievements">%d de %d logros obtenidos</string>
     <string name="ach_icon">Icono de logro</string>
+    <string name="shop_element_details">Detalles</string>
+    <string name="available_points">Puntos disponibles: %d</string>
 </resources>
