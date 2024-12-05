@@ -1,4 +1,4 @@
-package com.project.agunay.screens.stepscreen
+package com.project.agunay.adapter.kotlin.screens.stepscreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

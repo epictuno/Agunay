@@ -1,4 +1,4 @@
-package com.project.agunay.screens.mainscreen
+package com.project.agunay.adapter.kotlin.screens.mainscreen
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler

@@ -1,4 +1,4 @@
-package com.project.agunay.screens.triviascreen
+package com.project.agunay.adapter.kotlin.screens.triviascreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

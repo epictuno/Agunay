@@ -1,4 +1,4 @@
-package com.project.agunay.screens.profilescreen
+package com.project.agunay.adapter.kotlin.screens.profilescreen
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image

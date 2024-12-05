@@ -15,9 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.agunay.ui.theme.AgunayTheme
-import com.project.agunay.navigation.AppNavigation
-import com.project.agunay.screens.mainscreen.MainScreen
-import com.project.agunay.screens.mainscreen.MainScreenPreview
+import com.project.agunay.adapter.kotlin.navigation.AppNavigation
+import com.project.agunay.adapter.kotlin.screens.mainscreen.MainScreen
+import com.project.agunay.adapter.kotlin.screens.mainscreen.MainScreenPreview
 
 val DarkPurple = Color(0xFF290B32)
 @ExperimentalMaterial3Api
