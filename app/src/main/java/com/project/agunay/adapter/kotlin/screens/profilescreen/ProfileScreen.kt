@@ -28,6 +28,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.project.agunay.DarkPurple
 import com.project.agunay.R
 import com.project.agunay.adapter.kotlin.components.BottomButtons
@@ -36,12 +38,13 @@ import com.project.agunay.adapter.kotlin.components.WalkQuizTopBar
 import com.project.agunay.domain.Achievement
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             WalkQuizTopBar(
                 text = R.string.profile,
-                icon = R.drawable.account
+                icon = R.drawable.account,
+                navController = navController
             )
         }
     ) { innerPadding ->
@@ -54,7 +57,7 @@ fun ProfileScreen() {
                 .fillMaxSize()
         ) {
             ProfileCard()
-            BottomButtons()
+            BottomButtons(navController)
             BottomText()
         }
     }
@@ -163,5 +166,5 @@ fun AchievementInfoPreview() {
 @Composable
 @Preview
 fun ProfileScreenPreview() {
-    ProfileScreen()
+    ProfileScreen(rememberNavController())
 }

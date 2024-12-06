@@ -20,6 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.project.agunay.DarkPurple
 import com.project.agunay.R
 import com.project.agunay.adapter.kotlin.components.BottomButtons
@@ -27,12 +29,13 @@ import com.project.agunay.adapter.kotlin.components.BottomText
 import com.project.agunay.adapter.kotlin.components.WalkQuizTopBar
 
 @Composable
-fun StepScreen() {
+fun StepScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             WalkQuizTopBar(
                 text = R.string.steps_button,
-                icon = R.drawable.step
+                icon = R.drawable.step,
+                navController = navController
             )
         }
     ) { innerPadding ->
@@ -50,7 +53,7 @@ fun StepScreen() {
                 StepsCard(0)
                 PointsCard(0)
             }
-            BottomButtons()
+            BottomButtons(navController)
             BottomText()
         }
     }
@@ -99,5 +102,5 @@ fun StepsCard(
 @Composable
 @Preview
 fun StepScreenPreview() {
-    StepScreen()
+    StepScreen(rememberNavController())
 }

@@ -20,4 +20,8 @@
     <string name="available_points">Puntos disponibles: %d</string>
     <string name="type_user">Paco</string>
     <string name="username_invalid_error">Invalid Username</string>
+    <string name="info_text_1">Gana puntos caminando.</string>
+    <string name="info_text_2">Gasta puntos en la tienda para comprar consumibles</string>
+    <string name="info_text_3">Utiliza los consumibles en el trivia y obten mayores logros</string>
+    <string name="close_dialog">Cerrar</string>
 </resources>
