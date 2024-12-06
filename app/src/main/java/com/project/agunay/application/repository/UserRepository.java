@@ -1,24 +1,24 @@
 package com.project.agunay.application.repository;
 
 import com.project.agunay.adapter.firebase.Callback;
+import com.project.agunay.adapter.firebase.ErrorCallback;
 import com.project.agunay.adapter.firebase.Result;
+import com.project.agunay.adapter.firebase.SuccessCallback;
 import com.project.agunay.domain.User;
 
 import org.jetbrains.annotations.NotNull;
 
 public interface UserRepository {
 
-    void createUser(User user, Callback<User> callback);
+    void createUser(User user, SuccessCallback<User> callback, ErrorCallback callError);
 
-    User login(String email, String password);
+    void login(String email, String password, SuccessCallback<User> callback, ErrorCallback callError);
 
-    void updateUser(User user);
+    void updateUser(User user, SuccessCallback<User> callback, ErrorCallback callError);
 
-    void getUserByUsername(String username, Callback<User> callback);
+    void getUserByUsername(String username, SuccessCallback<User> callback);
 
-    User getUserByEmail(String email);
+    void getUserByEmail(String email,SuccessCallback<User> callback, ErrorCallback callError);
 
-    User getUser(String id);
-
-    void createUser(@NotNull User user, @NotNull Object any);
+    void getUser(String id,SuccessCallback<User> callback, ErrorCallback callError);
 }

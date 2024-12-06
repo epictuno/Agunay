@@ -317,7 +317,7 @@ fun FitquestClickableText(
 }
 
 @Composable
-fun FitquestCheckbox(
+fun WalkQuizCheckbox(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     label: String,

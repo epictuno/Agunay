@@ -24,4 +24,12 @@
     <string name="info_text_2">Gasta puntos en la tienda para comprar consumibles</string>
     <string name="info_text_3">Utiliza los consumibles en el trivia y obten mayores logros</string>
     <string name="close_dialog">Cerrar</string>
+    <string name="email_invalid_error">Email Invalido</string>
+    <string name="type_email">Email ej: ejemplo@ejemplo.com</string>
+    <string name="type_password">Contraseña</string>
+    <string name="password_invalid_error">Contraseña Incorrecta</string>
+    <string name="accept_tos">Aceptar TOS</string>
+    <string name="terms_not_accepted_error">Necesita aceptar los TOS para registrarse</string>
+    <string name="error">Un error ha ocurrido</string>
+    <string name="ok">Ok</string>
 </resources>

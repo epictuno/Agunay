@@ -33,10 +33,11 @@ public class FirebaseUserRepository implements UserRepository {
     }
 
     @Override
-    public void createUser(User user, Callback<User> callback) {/*
+    public void createUser(User user, SuccessCallback<User> callback,ErrorCallback callError) {
         getUserByUsername(user.getUsername(), existingUser -> {
             if (existingUser != null) {
                 callback.onComplete(null); // Usuario ya existe
+                callError.onError(new Exception("Username ${user.getName()} is already in use."));
                 return;
             }
 
@@ -56,23 +57,23 @@ public class FirebaseUserRepository implements UserRepository {
                         db.collection("users").document(firebaseUser.getUid()).set(userMap)
                                 .addOnCompleteListener(setTask -> {
                                     if (setTask.isSuccessful()) {
-                                        callback.onComplete(user); // Usuario creado con éxito
+                                        callback.onComplete(user);
                                     } else {
-                                        callback.onComplete(null); // Falló al guardar datos
+                                        callback.onComplete(null);
                                     }
                                 });
                     } else {
-                        callback.onComplete(null); // Error desconocido
+                        callback.onComplete(user);
                     }
                 } else {
-                    callback.onComplete(null); // Error en la creación del usuario
+                    callback.onComplete(null);
                 }
             });
-        });*/
+        });
     }
 
     @Override
-    public User login(String email, String password) {
+    public void login(String email, String password, SuccessCallback<User> callback, ErrorCallback callError) {
         Task<AuthResult> task = auth.signInWithEmailAndPassword(email, password);
         task.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -80,18 +81,20 @@ public class FirebaseUserRepository implements UserRepository {
                 if (task.isSuccessful()) {
                     FirebaseUser firebaseUser = task.getResult().getUser();
                     if (firebaseUser != null) {
-                        // Maneja el usuario autenticado
+                        callback.onComplete(null);
+                        return;
                     }
                 } else {
-                    // Maneja el error
+                    callError.onError(new Exception("User not found"));
+                    return;
                 }
             }
         });
-        return null;
+        callError.onError(new Exception("User not found"));
     }
 
     @Override
-    public void updateUser(User user) {
+    public void updateUser(User user, SuccessCallback<User> callback, ErrorCallback callError) {
         db.collection("users").document(user.getId()).set(user)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -104,7 +107,7 @@ public class FirebaseUserRepository implements UserRepository {
     }
 
     @Override
-    public void getUserByUsername(String username, Callback<User> callback) {
+    public void getUserByUsername(String username, SuccessCallback<User> callback) {
         db.collection("users").whereEqualTo("username", username).get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (queryDocumentSnapshots.isEmpty()) {
@@ -112,6 +115,7 @@ public class FirebaseUserRepository implements UserRepository {
                     } else {
                         User user = queryDocumentSnapshots.getDocuments().get(0).toObject(User.class);
                         callback.onComplete(user);
+                        return;
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -121,132 +125,31 @@ public class FirebaseUserRepository implements UserRepository {
     }
 
     @Override
-    public User getUserByEmail(String email) {
+    public void getUserByEmail(String email, SuccessCallback<User> callback, ErrorCallback callError) {
         Task<QuerySnapshot> task = db.collection("users").whereEqualTo("email", email).get();
         try {
             QuerySnapshot querySnapshot = task.getResult();
             if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                return querySnapshot.getDocuments().get(0).toObject(User.class);
+                callback.onComplete(querySnapshot.getDocuments().get(0).toObject(User.class));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        callback.onComplete(null);
+        callError.onError(new Exception("User not found"));
     }
 
     @Override
-    public User getUser(String id) {
+    public void getUser(String id, SuccessCallback<User> callback, ErrorCallback callError) {
         Task<DocumentSnapshot> task = db.collection("users").document(id).get();
         try {
             DocumentSnapshot document = task.getResult();
             if (document.exists()) {
-                return document.toObject(User.class);
+                callback.onComplete( document.toObject(User.class));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            callback.onComplete( null);
+            callError.onError(new Exception("User not found"));
         }
-        return null;
-    }
-
-    @Override
-    public void createUser(@NotNull User user, @NotNull Object any) {
-
     }
 }
-/*
-    @Override
-    public void createUser(User user, String password) {
-        auth.createUserWithEmailAndPassword(user.getEmail(), password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser firebaseUser = task.getResult().getUser();
-                            if (firebaseUser != null) {
-                                user.setId(firebaseUser.getUid());
-                                db.collection("users").document(user.getId()).set(user);
-                            }
-                        } else {
-                            // Maneja el error
-                        }
-                    }
-                });
-    }
-
-    @Override
-    public User login(String email, String password) {
-        Task<AuthResult> task = auth.signInWithEmailAndPassword(email, password);
-        task.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    FirebaseUser firebaseUser = task.getResult().getUser();
-                    if (firebaseUser != null) {
-                        // Maneja el usuario autenticado
-                    }
-                } else {
-                    // Maneja el error
-                }
-            }
-        });
-        return null;
-    }
-
-    @Override
-    public void updateUser(User user) {
-        db.collection("users").document(user.getId()).set(user)
-                .addOnCompleteListener(new OnCompleteListener<WriteResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<WriteResult> task) {
-                        if (!task.isSuccessful()) {
-                            // Maneja el error
-                        }
-                        else {
-                        }
-                    }
-                }
-    }
-
-    @Override
-    public User getUserByUsername(String username) {
-        Task<QuerySnapshot> task = db.collection("users").whereEqualTo("username", username).get();
-        try {
-            QuerySnapshot querySnapshot = task.getResult();
-            if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                return querySnapshot.getDocuments().get(0).toObject(User.class);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public User getUserByEmail(String email) {
-        Task<QuerySnapshot> task = db.collection("users").whereEqualTo("email", email).get();
-        try {
-            QuerySnapshot querySnapshot = task.getResult();
-            if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                return querySnapshot.getDocuments().get(0).toObject(User.class);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public User getUser(String id) {
-        Task<DocumentSnapshot> task = db.collection("users").document(id).get();
-        try {
-            DocumentSnapshot document = task.getResult();
-            if (document.exists()) {
-                return document.toObject(User.class);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    });
-}
-*/
