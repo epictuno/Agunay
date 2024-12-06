@@ -58,7 +58,7 @@ fun BodyContent(
             contentDescription = "Icono de la aplicación"
         )
         RegistrationScreen(viewModel = userViewModel)
-        BottomButtons()
+        BottomButtons(navController)
         BottomText()
     }
 }

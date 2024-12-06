@@ -18,6 +18,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.project.agunay.DarkPurple
 import com.project.agunay.R
 import com.project.agunay.adapter.kotlin.components.BottomButtons
@@ -27,12 +29,13 @@ import com.project.agunay.adapter.kotlin.components.WalkQuizTopBar
 import com.project.agunay.domain.ShopItem
 
 @Composable
-fun ShopScreen() {
+fun ShopScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             WalkQuizTopBar(
                 text = R.string.shop_button,
-                icon = R.drawable.shop
+                icon = R.drawable.shop,
+                navController = navController
             )
         }
     ) { innerPadding ->
@@ -46,7 +49,7 @@ fun ShopScreen() {
         ) {
             AvailablePointsCard(0)
             ShopElementGrid(listOf())
-            BottomButtons()
+            BottomButtons(navController)
             BottomText()
         }
     }
@@ -98,5 +101,5 @@ fun ShopElementPreview() {
 @Composable
 @Preview
 fun ShopScreenPreview() {
-    ShopScreen()
+    ShopScreen(rememberNavController())
 }

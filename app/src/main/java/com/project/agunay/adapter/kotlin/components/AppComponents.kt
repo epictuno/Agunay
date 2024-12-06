@@ -90,7 +90,10 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.project.agunay.R
+import com.project.agunay.adapter.kotlin.navigation.AppScreens
 import com.project.agunay.ui.theme.DarkGreen
 import com.project.agunay.ui.theme.DarkGrey
 import com.project.agunay.ui.theme.LightGrey
@@ -732,7 +735,7 @@ fun WalkQuizRoundButton(
         onClick = onClick,
         colors = IconButtonDefaults.iconButtonColors(containerColor = LightGrey),
         modifier = Modifier.size(64.dp)
-    ) { 
+    ) {
         Icon(
             painterResource(icon),
             contentDescription = contentDescription,
@@ -743,22 +746,31 @@ fun WalkQuizRoundButton(
 }
 
 @Composable
-fun BottomButtons() {
+fun BottomButtons(navController: NavController) {
+    val openInfoDialog = remember { mutableStateOf(false) }
+
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
         modifier = Modifier
             .fillMaxWidth()
     ) {
         WalkQuizRoundButton(
-            onClick = {},
+            onClick = { navController.navigate(AppScreens.ProfileScreen.route) },
             icon = R.drawable.account,
             contentDescription = stringResource(R.string.profile_button),
         )
         WalkQuizRoundButton(
-            onClick = {},
+            onClick = { openInfoDialog.value = true },
             icon = R.drawable.info,
             contentDescription = stringResource(R.string.info_button)
         )
+    }
+    when {
+        openInfoDialog.value -> {
+            InfoDialog(
+                onDismiss = { openInfoDialog.value = false }
+            )
+        }
     }
 }
 
@@ -774,7 +786,8 @@ fun BottomText() {
 @Composable
 fun WalkQuizTopBar(
     @StringRes text: Int,
-    @DrawableRes icon: Int
+    @DrawableRes icon: Int,
+    navController: NavHostController
 ) {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
@@ -798,7 +811,7 @@ fun WalkQuizTopBar(
         },
         navigationIcon = {
             WalkQuizRoundButton(
-                onClick = {},
+                onClick = { navController.navigateUp() },
                 icon = R.drawable.left_arrow,
                 contentDescription = stringResource(R.string.back_button)
             )
@@ -843,4 +856,38 @@ fun ShopElement(
             }
         }
     }
+}
+
+@Composable
+fun InfoDialog(
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        icon = {
+            Icon(
+                painterResource(R.drawable.info),
+                contentDescription = "Example Icon"
+            )
+        },
+        title = {
+            Text("Información de WalkQuiz")
+        },
+        text = {
+            Column {
+                Text(stringResource(R.string.info_text_1))
+                Text(stringResource(R.string.info_text_2))
+                Text(stringResource(R.string.info_text_3))
+            }
+        },
+        onDismissRequest = onDismiss,
+        confirmButton = {},
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss
+            ) {
+                Text(stringResource(R.string.close_dialog))
+            }
+        }
+    )
+
 }

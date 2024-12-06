@@ -18,6 +18,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.project.agunay.DarkPurple
 import com.project.agunay.R
 import com.project.agunay.adapter.kotlin.components.BottomText
@@ -26,12 +28,14 @@ import com.project.agunay.adapter.kotlin.components.WalkQuizSquareButtonWithImag
 import com.project.agunay.adapter.kotlin.components.WalkQuizTopBar
 
 @Composable
-fun TriviaScreen() {
+fun TriviaScreen(navController: NavHostController) {
+
     Scaffold(
         topBar = {
             WalkQuizTopBar(
                 text = R.string.trivia_button,
-                icon = R.drawable.trivia
+                icon = R.drawable.trivia,
+                navController = navController
             )
         }
     ) { innerPadding ->
@@ -125,5 +129,5 @@ fun TriviaInfoCard(modifier: Modifier = Modifier) {
 @Composable
 @Preview
 fun TriviaScreenPreview() {
-    TriviaScreen()
+    TriviaScreen(rememberNavController())
 }
