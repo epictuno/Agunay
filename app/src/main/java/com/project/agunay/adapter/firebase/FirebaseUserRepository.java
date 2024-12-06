@@ -33,7 +33,7 @@ public class FirebaseUserRepository implements UserRepository {
     }
 
     @Override
-    public void createUser(User user, Callback<User> callback) {
+    public void createUser(User user, Callback<User> callback) {/*
         getUserByUsername(user.getUsername(), existingUser -> {
             if (existingUser != null) {
                 callback.onComplete(null); // Usuario ya existe
@@ -68,7 +68,7 @@ public class FirebaseUserRepository implements UserRepository {
                     callback.onComplete(null); // Error en la creación del usuario
                 }
             });
-        });
+        });*/
     }
 
     @Override

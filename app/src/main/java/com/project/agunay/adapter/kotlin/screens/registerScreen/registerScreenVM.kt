@@ -5,14 +5,15 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.project.agunay.adapter.firebase.FirebaseUserRepository
 import com.project.agunay.application.repository.UserRepository
 import com.project.agunay.domain.User
 
 
-class UserViewModel(
-    private val userRepository: UserRepository // Inyecta tu repositorio
+class registerScreenVM(
+    //private val userRepository: UserRepository = FirebaseUserRepository()
 ) : ViewModel() {
-
+/*
     private val _currentUser = MutableLiveData<User?>()
     val currentUser: LiveData<User?> = _currentUser
 
@@ -28,5 +29,5 @@ class UserViewModel(
                 Log.e("CreateUser", "Error al crear el usuario")
             }
         }
-    }
+    }*/
 }
