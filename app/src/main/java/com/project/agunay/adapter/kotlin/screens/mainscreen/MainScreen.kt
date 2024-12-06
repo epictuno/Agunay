@@ -21,9 +21,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.agunay.ui.theme.AgunayTheme
 import com.project.agunay.R
+import com.project.agunay.adapter.firebase.FirebaseUserRepository
 import com.project.agunay.adapter.kotlin.components.BottomButtons
 import com.project.agunay.adapter.kotlin.components.BottomText
 import com.project.agunay.adapter.kotlin.components.WalkQuizSquareButtonWithIcon
+import com.project.agunay.domain.User
 
 @Composable
 fun MainScreen(navController: NavController) {

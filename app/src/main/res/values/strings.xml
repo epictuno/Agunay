@@ -18,4 +18,6 @@
     <string name="ach_icon">Icono de logro</string>
     <string name="shop_element_details">Detalles</string>
     <string name="available_points">Puntos disponibles: %d</string>
+    <string name="type_user">Paco</string>
+    <string name="username_invalid_error">Invalid Username</string>
 </resources>

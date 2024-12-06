@@ -10,18 +10,20 @@ public class User {
     private List<ShopItem> inventory;
     private byte[] profilePicture;
     private String username;
-
-    public User() {
+    private String password;
+    public User(String email, String password, String username) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
     }
 
-    public User(String id, int points, List<Achievement> achievements, String email, List<ShopItem> inventory, byte[] profilePicture, String username) {
+    public User(String email, String password, String username, String id, int points, List<Achievement> achievements, List<ShopItem> inventory, byte[] profilePicture) {
+        this(email,password,username);
         this.id = id;
         this.points = points;
         this.achievements = achievements;
-        this.email = email;
         this.inventory = inventory;
         this.profilePicture = profilePicture;
-        this.username = username;
     }
 
     public String getId() {
@@ -50,6 +52,10 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setEmail(String email) {

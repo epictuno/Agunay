@@ -233,7 +233,7 @@ fun FitquestButton(
 }
 
 @Composable
-fun FitquestTextField(
+fun WalkQuizTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
