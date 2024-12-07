@@ -245,6 +245,9 @@ fun WalkQuizTextField(
     isPassword: Boolean = false,
     isEmail: Boolean = false,
     isUser: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(
+        imeAction = ImeAction.Default
+    )
 ){
     var passwordVisibility by remember { mutableStateOf(!isPassword) }
     OutlinedTextField(
@@ -291,7 +294,8 @@ fun WalkQuizTextField(
                     color = Color.Red
                 )
             }
-        }
+        },
+        keyboardOptions = keyboardOptions
     )
 }
 

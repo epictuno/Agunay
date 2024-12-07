@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -56,7 +58,7 @@ fun LoginScreen(
     }
 
     BackHandler {
-        navController.navigate(AppScreens.MainScreen.route)
+        activity.finishAffinity()
     }
 }
 
@@ -109,7 +111,10 @@ fun LoginScreenContent(
             },
             label = stringResource(R.string.type_user_or_email),
             errorMessage = userInputError,
-            isUser = true
+            isUser = true,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -123,7 +128,10 @@ fun LoginScreenContent(
             label = stringResource(R.string.type_password),
             errorMessage = passwordError,
             isUser = false,
-            isPassword = true
+            isPassword = true,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
