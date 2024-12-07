@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
@@ -42,7 +41,6 @@ import com.project.agunay.adapter.kotlin.components.WalkQuizSquareButtonWithIcon
 import com.project.agunay.adapter.kotlin.components.WalkQuizTextField
 import com.project.agunay.adapter.kotlin.configuration.CurrentUser
 import com.project.agunay.adapter.kotlin.navigation.AppScreens
-import com.project.agunay.adapter.kotlin.screens.registerScreen.registerScreenVM
 
 @Composable
 fun LoginScreen(
@@ -80,12 +78,16 @@ fun BodyContent(
         )
         Spacer(modifier = Modifier.height(32.dp))
 
-        LoginScreenContent(viewModel = userViewModel, navController = navController)
+        LoginScreenContent(viewModel = userViewModel, navController = navController, currentAppUser = currentUser)
     }
 }
 
 @Composable
-fun LoginScreenContent(viewModel: LoginScreenVM, navController: NavController) {
+fun LoginScreenContent(
+    viewModel: LoginScreenVM,
+    navController: NavController,
+    currentAppUser: CurrentUser
+) {
     var userInput by remember { mutableStateOf("") }
     var userInputError by remember { mutableStateOf<String?>(null) }
     var password by remember { mutableStateOf("") }
@@ -170,6 +172,7 @@ fun LoginScreenContent(viewModel: LoginScreenVM, navController: NavController) {
 
         LaunchedEffect(currentUser) {
             currentUser?.let {
+                currentAppUser.setUser(currentUser!!)
                 navController.navigate(route = AppScreens.MainScreen.route)
             }
         }

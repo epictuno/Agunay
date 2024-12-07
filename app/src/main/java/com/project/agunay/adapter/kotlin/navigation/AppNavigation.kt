@@ -16,18 +16,22 @@ import com.project.agunay.adapter.kotlin.screens.triviascreen.TriviaScreen
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    val CurrentUser = CurrentUser()
+    val currentUser = CurrentUser()
     NavHost(navController = navController, startDestination = AppScreens.LoginScreen.route) {
         composable(route = AppScreens.LoginScreen.route){backStackEntry ->
-            LoginScreen(navController, CurrentUser, backStackEntry)
+            LoginScreen(navController, currentUser, backStackEntry)
         }
         composable(route = AppScreens.RegisterScreen.route){backStackEntry ->
-            RegisterScreen(navController, CurrentUser, backStackEntry)
+            RegisterScreen(navController, currentUser, backStackEntry)
         }
-        composable(route = AppScreens.MainScreen.route) { MainScreen(navController) }
+        composable(route = AppScreens.MainScreen.route) {backStackEntry ->
+            MainScreen(navController, currentUser, backStackEntry)
+        }
         composable(route = AppScreens.TriviaScreen.route) { TriviaScreen(navController) }
         composable(route = AppScreens.ShopScreen.route) { ShopScreen(navController) }
-        composable(route = AppScreens.ProfileScreen.route) { ProfileScreen(navController) }
+        composable(route = AppScreens.ProfileScreen.route) {backStackEntry ->
+            ProfileScreen(navController, currentUser, backStackEntry)
+        }
         composable(route = AppScreens.StepsScreen.route) { StepScreen(navController) }
 
     }

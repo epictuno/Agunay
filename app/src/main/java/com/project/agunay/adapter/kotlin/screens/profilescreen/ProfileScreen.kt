@@ -13,12 +13,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +31,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.project.agunay.DarkPurple
@@ -35,10 +40,26 @@ import com.project.agunay.R
 import com.project.agunay.adapter.kotlin.components.BottomButtons
 import com.project.agunay.adapter.kotlin.components.BottomText
 import com.project.agunay.adapter.kotlin.components.WalkQuizTopBar
+import com.project.agunay.adapter.kotlin.configuration.CurrentUser
 import com.project.agunay.domain.Achievement
+import com.project.agunay.domain.User
 
 @Composable
-fun ProfileScreen(navController: NavHostController) {
+fun ProfileScreen(
+    navController: NavHostController,
+    user: CurrentUser,
+    backStackEntry: NavBackStackEntry
+) {
+    val viewModel: ProfileScreenVM = viewModel(backStackEntry)
+    viewModel.setCurrentUser(user)
+
+    val currentUser by viewModel.currentUser.observeAsState()
+
+    BodyContent(navController, currentUser)
+}
+
+@Composable
+fun BodyContent(navController: NavHostController, currentUser: User?) {
     Scaffold(
         topBar = {
             WalkQuizTopBar(
@@ -56,7 +77,7 @@ fun ProfileScreen(navController: NavHostController) {
                 .background(DarkPurple)
                 .fillMaxSize()
         ) {
-            ProfileCard()
+            ProfileCard(currentUser)
             BottomButtons(navController)
             BottomText()
         }
@@ -64,7 +85,7 @@ fun ProfileScreen(navController: NavHostController) {
 }
 
 @Composable
-fun ProfileCard() {
+fun ProfileCard(user: User?) {
     Card {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -78,22 +99,39 @@ fun ProfileCard() {
                     .size(150.dp)
                     .clip(CircleShape)
             )
-            Text(
-                text = "Nombre",
-                fontSize = 24.sp,
-                modifier = Modifier.padding(0.dp, 8.dp)
-            )
-            Text(
-                text = stringResource(R.string.points, 0),
-                fontSize = 16.sp
-            )
-            AchievementsCard()
+            if (user != null) {
+                Text(
+                    text = user.username,
+                    fontSize = 24.sp,
+                    modifier = Modifier.padding(0.dp, 8.dp)
+                )
+            }
+            else {
+                Text(
+                    text = "Nombre",
+                    fontSize = 24.sp,
+                    modifier = Modifier.padding(0.dp, 8.dp)
+                )
+            }
+            if (user != null) {
+                Text(
+                    text = stringResource(R.string.points, user.points),
+                    fontSize = 16.sp
+                )
+            }
+            else {
+                Text(
+                    text = stringResource(R.string.points, 0),
+                    fontSize = 16.sp
+                )
+            }
+            AchievementsCard(user)
         }
     }
 }
 
 @Composable
-fun AchievementsCard() {
+fun AchievementsCard(user: User?) {
     val fontSize = 20.sp
     Card(
         colors = CardDefaults.cardColors(
@@ -108,11 +146,20 @@ fun AchievementsCard() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = stringResource(R.string.achievements, 1, 10),
-                fontSize = fontSize
-            )
-            AchievementList(arrayListOf())
+            if (user != null) {
+                Text(
+                    text = stringResource(R.string.achievements, user.achievements.size, 10),
+                    fontSize = fontSize
+                )
+                AchievementList(user.achievements)
+            }
+            else {
+                Text(
+                    text = stringResource(R.string.achievements, 1, 10),
+                    fontSize = fontSize
+                )
+                AchievementList(arrayListOf())
+            }
         }
     }
 }
@@ -150,8 +197,8 @@ fun AchievementList(
     achievementList: List<Achievement>
 ) {
     LazyColumn {
-        items(8) {
-            AchievementInfo("Cagliostro es magordito", R.drawable.placeholder)
+        items(achievementList) {achievement ->
+            AchievementInfo(achievement.title, R.drawable.placeholder)
         }
     }
     //Implementar que los elementos AchievementInfo se creen a partir de una lista de logros
@@ -166,5 +213,5 @@ fun AchievementInfoPreview() {
 @Composable
 @Preview
 fun ProfileScreenPreview() {
-    ProfileScreen(rememberNavController())
+    BodyContent(rememberNavController(), null)
 }
