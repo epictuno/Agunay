@@ -16,7 +16,7 @@ public interface UserRepository {
 
     void updateUser(User user, SuccessCallback<User> callback, ErrorCallback callError);
 
-    void getUserByUsername(String username, SuccessCallback<User> callback);
+    void getUserByUsername(String username, SuccessCallback<User> callback, ErrorCallback callError);
 
     void getUserByEmail(String email,SuccessCallback<User> callback, ErrorCallback callError);
 

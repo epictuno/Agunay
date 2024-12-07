@@ -32,4 +32,8 @@
     <string name="terms_not_accepted_error">Necesita aceptar los TOS para registrarse</string>
     <string name="error">Un error ha ocurrido</string>
     <string name="ok">Ok</string>
+    <string name="type_user_or_email">Email o nombre de usuario</string>
+    <string name="user_invalid_error">Error en las credenciales</string>
+    <string name="login_button">Iniciar sesión</string>
+    <string name="no_account_register">No tiene cuenta todavia? Registrese aqui\n</string>
 </resources>
