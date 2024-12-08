@@ -67,7 +67,7 @@ fun ShopScreen(navController: NavHostController, currentUser: CurrentUser, navBa
                 .fillMaxSize()
                 .background(DarkPurple)
         ) {
-            AvailablePointsCard(points = user?.points ?: 0, isLoading = isLoading)
+            AvailablePointsCard(points = currentUser.getUser()?.points ?: 0, isLoading = isLoading)
             ShopElementGrid(shopItems,currentUser, viewModel::buyShopItem)
             BottomButtons(navController)
             BottomText()

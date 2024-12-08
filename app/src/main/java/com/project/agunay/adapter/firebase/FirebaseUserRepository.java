@@ -106,7 +106,9 @@ public class FirebaseUserRepository implements UserRepository {
 
     @Override
     public void updateUser(User user, SuccessCallback<User> callback, ErrorCallback callError) {
-        db.collection("users").document(user.getId()).set(user)
+        Map<String, Object> userMap = userToMap(user);
+
+        db.collection("users").document(user.getId()).set(userMap)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
