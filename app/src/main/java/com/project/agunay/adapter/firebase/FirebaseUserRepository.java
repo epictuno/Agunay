@@ -110,10 +110,15 @@ public class FirebaseUserRepository implements UserRepository {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (!task.isSuccessful()) {
-                            // Maneja el error
+                        if (task.isSuccessful()) {
+                            callback.onComplete(user);
+                        } else {
+                            callError.onError(new Exception("Failed to update user"));
                         }
                     }
+                })
+                .addOnFailureListener(e -> {
+                    callError.onError(new Exception("Failed to update user: " + e.getMessage()));
                 });
     }
 

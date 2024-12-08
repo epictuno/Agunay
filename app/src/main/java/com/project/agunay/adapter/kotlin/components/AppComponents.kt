@@ -2,6 +2,7 @@ package com.project.agunay.adapter.kotlin.components
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -27,9 +28,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.AlertDialog
@@ -68,8 +67,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
@@ -94,13 +94,14 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.project.agunay.R
 import com.project.agunay.adapter.kotlin.navigation.AppScreens
+import com.project.agunay.domain.ShopItem
 import com.project.agunay.ui.theme.DarkGreen
 import com.project.agunay.ui.theme.DarkGrey
 import com.project.agunay.ui.theme.LightGrey
 import com.project.agunay.ui.theme.SaturatedGreen
 
 @Composable
-fun FitquestTransparentButton(
+fun WalkQuizTransparentButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier
@@ -216,7 +217,7 @@ fun ErrorDialog(
 }
 
 @Composable
-fun FitquestButton(
+fun WalkQuizButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier,
@@ -300,7 +301,7 @@ fun WalkQuizTextField(
 }
 
 @Composable
-fun FitquestClickableText(
+fun WalkQuizClickableText(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -327,7 +328,7 @@ fun WalkQuizCheckbox(
     label: String,
     modifier: Modifier = Modifier
 ){
-    FitquestLabelledCheckbox(
+    WalkQuizLabelledCheckbox(
         checked = checked,
         onCheckedChange = onCheckedChange,
         colors = CheckboxDefaults.colors(checkmarkColor = Color.White),
@@ -337,7 +338,7 @@ fun WalkQuizCheckbox(
 }
 
 @Composable
-fun FitquestLabelledCheckbox(
+fun WalkQuizLabelledCheckbox(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     label: String,
@@ -362,7 +363,7 @@ fun FitquestLabelledCheckbox(
 }
 
 @Composable
-fun FitquestProfilePicture(
+fun WalkQuizProfilePicture(
     userProfileImage: Painter = painterResource(id = R.drawable.default_profile_picture),
     isChangeable: Boolean = false,
     onUploadImageClick: () -> Unit = {},
@@ -448,64 +449,6 @@ fun ChatBox(onSend: (String) -> Unit, modifier: Modifier) {
                     .fillMaxSize()
                     .padding(8.dp)
             )
-        }
-    }
-}
-
-@Composable
-fun FitquestSearchBar(
-    query: MutableState<String>,
-    onSearch: (String) -> Unit,
-    placeholderText: String = "Search",
-    backgroundColor: Color = LightGrey
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(15.dp)
-            .background(backgroundColor, RoundedCornerShape(20.dp))
-            .padding(horizontal = 12.dp, vertical = 2.dp) // this controls the size of the search bar
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            BasicTextField(
-                value = query.value,
-                onValueChange = { query.value = it },
-                singleLine = true,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 8.dp),
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(
-                    onSearch = {
-                        onSearch(query.value)
-                    }
-                ),
-                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.DarkGray, fontSize = 16.sp),
-                cursorBrush = SolidColor(Color.Black),
-                decorationBox = { innerTextField ->
-                    if (query.value.isEmpty()) {
-                        Text(
-                            text = placeholderText,
-                            color = Color.Gray,
-                            fontSize = 16.sp
-                        )
-                    }
-                    innerTextField()
-                }
-            )
-            IconButton(
-                onClick = { onSearch(query.value) },
-                modifier = Modifier.align(Alignment.CenterVertically)
-            ) {
-                Icon(
-                    painter = painterResource(android.R.drawable.ic_menu_search),
-                    contentDescription = "Search",
-                    tint = Color.DarkGray
-                )
-            }
         }
     }
 }
@@ -659,7 +602,7 @@ fun AchievementDialog(achievementImage: Painter, title: String, description: Str
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
                     )
-                    FitquestButton(
+                WalkQuizButton(
                         onClick = onDismiss,
                         text = "OK",
                         modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -825,28 +768,36 @@ fun WalkQuizTopBar(
 
 @Composable
 fun ShopElement(
-    @DrawableRes image: Int,
-    name: String,
-    rightButtonText: String,
+    shopItem: ShopItem,
     onRightButtonClick: () -> Unit,
 ) {
     val fontSize = 12.sp
+    var showDialog by remember { mutableStateOf(false) }
+
     Card {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Image(
-                painter = painterResource(image),
-                contentDescription = name,
-                modifier = Modifier.size(64.dp)
-            )
+            if (shopItem.image != null) {
+                Image(
+                    bitmap = shopItem.image.asImageBitmap(),
+                    contentDescription = shopItem.name,
+                    modifier = Modifier.size(64.dp)
+                )
+            } else {
+                Image(
+                    painter = painterResource(R.drawable.placeholder),
+                    contentDescription = shopItem.name,
+                    modifier = Modifier.size(64.dp)
+                )
+            }
             Text(
-                text = name,
+                text = shopItem.name,
                 fontSize = fontSize
             )
             Row {
                 Button(
-                    onClick = {},
+                    onClick = { showDialog = true },
                     modifier = Modifier
                         .padding(1.dp)
                 ) {
@@ -855,11 +806,22 @@ fun ShopElement(
                 Button(
                     onClick = onRightButtonClick,
                 ) {
-                    Text(rightButtonText, fontSize = fontSize)
+                    Text("Comprar", fontSize = fontSize)
                 }
             }
         }
     }
+
+    if (showDialog) {
+        detailsDialog(
+            shopItem = shopItem,
+            onDismiss = { showDialog = false }
+        )
+    }
+}
+
+fun ByteArray.asImageBitmap(): ImageBitmap {
+    return BitmapFactory.decodeByteArray(this, 0, this.size).asImageBitmap()
 }
 
 @Composable
@@ -894,4 +856,43 @@ fun InfoDialog(
         }
     )
 
+}
+
+@Composable
+fun detailsDialog(
+    shopItem: ShopItem,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(text = shopItem.name)
+        },
+        text = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (shopItem.image != null) {
+                    Image(
+                        bitmap = shopItem.image.asImageBitmap(),
+                        contentDescription = shopItem.name,
+                        modifier = Modifier.size(128.dp)
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(R.drawable.placeholder),
+                        contentDescription = shopItem.name,
+                        modifier = Modifier.size(128.dp)
+                    )
+                }
+                Text(text = shopItem.description)
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(R.string.close_dialog))
+            }
+        }
+    )
 }

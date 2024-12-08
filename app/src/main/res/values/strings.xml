@@ -37,4 +37,7 @@
     <string name="login_button">Iniciar sesión</string>
     <string name="no_account_register">No tiene cuenta todavia? Registrese aqui\n</string>
     <string name="register">Registrarse</string>
+    <string name="shop">Tienda</string>
+    <string name="shopDetails">"Details of: "</string>
+    <string name="error_title">An error has ocurred</string>
 </resources>

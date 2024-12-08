@@ -28,7 +28,8 @@ fun AppNavigation() {
             MainScreen(navController, currentUser, backStackEntry)
         }
         composable(route = AppScreens.TriviaScreen.route) { TriviaScreen(navController) }
-        composable(route = AppScreens.ShopScreen.route) { ShopScreen(navController) }
+        composable(route = AppScreens.ShopScreen.route) { backStackEntry ->
+            ShopScreen(navController, currentUser, backStackEntry) }
         composable(route = AppScreens.ProfileScreen.route) {backStackEntry ->
             ProfileScreen(navController, currentUser, backStackEntry)
         }
