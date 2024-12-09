@@ -1,5 +1,7 @@
 package com.project.agunay.adapter.firebase;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -133,7 +135,7 @@ public class FirebaseUserRepository implements UserRepository {
                         callback.onComplete(null);
                     } else {
                         DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
-                        documentToUser(document, callback, callError);
+                        documentToUser2(document, callback, callError);
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -152,7 +154,7 @@ public class FirebaseUserRepository implements UserRepository {
                         callError.onError(new Exception("User not found with that email "));
                     } else {
                         DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
-                        documentToUser(document, callback, callError);
+                        documentToUser2(document, callback, callError);
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -207,6 +209,52 @@ public class FirebaseUserRepository implements UserRepository {
                 callback.onComplete(user);
             }, callError);
         }, callError);
+    }
+
+    private void documentToUser2(DocumentSnapshot document, SuccessCallback<User> callback, ErrorCallback callError) {
+        try {
+            // Extraer datos básicos del usuario
+            String id = document.getId();
+            String email = document.getString("email");
+            String username = document.getString("username");
+            int points = document.getLong("points").intValue();
+            byte[] profilePicture = document.getBlob("profilePicture") != null ? document.getBlob("profilePicture").toBytes() : null;
+
+            // Preparar usuario inicial (sin logros ni inventario)
+            User user = new User(email, "", username, id, points, new ArrayList<>(), new HashMap<>(), profilePicture);
+
+            // Cargar logros y artículos de inventario de manera independiente
+            achievementRepository.getAllAchievements(achievements -> {
+                List<String> achievementIds = (List<String>) document.get("achievements");
+                List<Achievement> userAchievements = (achievementIds != null) ? achievements.stream()
+                        .filter(achievement -> achievementIds.contains(achievement.getId()))
+                        .collect(Collectors.toList()) : new ArrayList<>();
+                user.setAchievements(userAchievements);
+
+                // Cargar inventario
+                shopItemRepository.getAllShopItems(shopItems -> {
+                    List<Map<String, Object>> inventoryList = (List<Map<String, Object>>) document.get("inventory");
+                    Map<ShopItem, Integer> inventory = new HashMap<>();
+                    if (inventoryList != null) {
+                        for (Map<String, Object> itemMap : inventoryList) {
+                            String itemId = (String) itemMap.get("id");
+                            int quantity = ((Long) itemMap.get("quantity")).intValue();
+                            shopItems.stream()
+                                    .filter(item -> item.getId().equals(itemId))
+                                    .findFirst()
+                                    .ifPresent(item -> inventory.put(item, quantity));
+                        }
+                    }
+                    user.setInventory(inventory);
+
+                    // Callback final con el usuario completo
+                    callback.onComplete(user);
+                }, callError);
+            }, callError);
+        } catch (Exception e) {
+            Log.e("documentToUser", "Error al procesar el usuario: " + e.getMessage());
+            callError.onError(e);
+        }
     }
 
     private Map<String, Object> userToMap(User user) {
