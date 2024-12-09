@@ -734,7 +734,8 @@ fun BottomText() {
 fun WalkQuizTopBar(
     @StringRes text: Int,
     @DrawableRes icon: Int,
-    navController: NavHostController
+    navController: NavHostController,
+    onBackButtonClick: () -> Unit = { navController.navigateUp() }
 ) {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
@@ -758,7 +759,7 @@ fun WalkQuizTopBar(
         },
         navigationIcon = {
             WalkQuizRoundButton(
-                onClick = { navController.navigateUp() },
+                onClick = onBackButtonClick,
                 icon = R.drawable.left_arrow,
                 contentDescription = stringResource(R.string.back_button)
             )

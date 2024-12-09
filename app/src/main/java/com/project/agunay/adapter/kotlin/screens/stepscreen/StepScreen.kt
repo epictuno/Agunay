@@ -37,30 +37,42 @@ import com.project.agunay.adapter.kotlin.configuration.CurrentUser
 @Composable
 fun StepScreen(
     navController: NavHostController,
-    currentUser: CurrentUser,
+    user: CurrentUser,
     backStackEntry: NavBackStackEntry
 ) {
     val viewModel: StepScreenVM = viewModel(backStackEntry)
 
     val context = LocalContext.current
 
+    viewModel.setCurrentUser(user)
     viewModel.initSensor(context)
 
     val stepState = viewModel.steps.observeAsState()
     val pointState = viewModel.points.observeAsState()
+    
+    viewModel.setCurrentUser(user)
 
-    BodyContent(navController, stepState, pointState)
+    BodyContent(navController, stepState, pointState, viewModel)
 
 }
 
 @Composable
-fun BodyContent(navController: NavHostController, stepState: State<Int?>?, pointState: State<Int?>?) {
+fun BodyContent(
+    navController: NavHostController,
+    stepState: State<Int?>?,
+    pointState: State<Int?>?,
+    viewModel: StepScreenVM?,
+) {
     Scaffold(
         topBar = {
             WalkQuizTopBar(
                 text = R.string.steps_button,
                 icon = R.drawable.step,
-                navController = navController
+                navController = navController,
+                onBackButtonClick = {
+                    viewModel?.updateUserPoints()
+                    navController.navigateUp()
+                }
             )
         }
     ) { innerPadding ->
@@ -127,5 +139,5 @@ fun StepsCard(
 @Composable
 @Preview
 fun StepScreenPreview() {
-    BodyContent(rememberNavController(), null, null)
+    BodyContent(rememberNavController(), null, null, null)
 }
