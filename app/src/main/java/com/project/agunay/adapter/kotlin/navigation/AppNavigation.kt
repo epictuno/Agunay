@@ -33,7 +33,9 @@ fun AppNavigation() {
         composable(route = AppScreens.ProfileScreen.route) {backStackEntry ->
             ProfileScreen(navController, currentUser, backStackEntry)
         }
-        composable(route = AppScreens.StepsScreen.route) { StepScreen(navController) }
+        composable(route = AppScreens.StepsScreen.route) { backStackEntry ->
+            StepScreen(navController, currentUser, backStackEntry)
+        }
 
     }
 }

@@ -12,14 +12,19 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.project.agunay.DarkPurple
@@ -27,9 +32,29 @@ import com.project.agunay.R
 import com.project.agunay.adapter.kotlin.components.BottomButtons
 import com.project.agunay.adapter.kotlin.components.BottomText
 import com.project.agunay.adapter.kotlin.components.WalkQuizTopBar
+import com.project.agunay.adapter.kotlin.configuration.CurrentUser
 
 @Composable
-fun StepScreen(navController: NavHostController) {
+fun StepScreen(
+    navController: NavHostController,
+    currentUser: CurrentUser,
+    backStackEntry: NavBackStackEntry
+) {
+    val viewModel: StepScreenVM = viewModel(backStackEntry)
+
+    val context = LocalContext.current
+
+    viewModel.initSensor(context)
+
+    val stepState = viewModel.steps.observeAsState()
+    val pointState = viewModel.points.observeAsState()
+
+    BodyContent(navController, stepState, pointState)
+
+}
+
+@Composable
+fun BodyContent(navController: NavHostController, stepState: State<Int?>?, pointState: State<Int?>?) {
     Scaffold(
         topBar = {
             WalkQuizTopBar(
@@ -50,8 +75,8 @@ fun StepScreen(navController: NavHostController) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                StepsCard(0)
-                PointsCard(0)
+                StepsCard(stepState?.value ?: 0)
+                PointsCard(pointState?.value ?: 0)
             }
             BottomButtons(navController)
             BottomText()
@@ -102,5 +127,5 @@ fun StepsCard(
 @Composable
 @Preview
 fun StepScreenPreview() {
-    StepScreen(rememberNavController())
+    BodyContent(rememberNavController(), null, null)
 }
