@@ -9,10 +9,14 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.project.agunay.adapter.firebase.FirebaseUserRepository
 import com.project.agunay.adapter.kotlin.configuration.CurrentUser
+import com.project.agunay.application.repository.UserRepository
 import com.project.agunay.domain.User
 
-class StepScreenVM: ViewModel() {
+class StepScreenVM(
+    private val userRepository: UserRepository = FirebaseUserRepository()
+): ViewModel() {
     private val _steps = MutableLiveData(0)
     val steps: LiveData<Int> = _steps
 
@@ -21,6 +25,9 @@ class StepScreenVM: ViewModel() {
 
     private val _currentUser = MutableLiveData<User?>()
     val currentUser: LiveData<User?> = _currentUser
+
+    private val _isLoading = MutableLiveData<Boolean>(false)
+    val isLoading: LiveData<Boolean> = _isLoading
 
     private var initialSteps = -1
     private var stepsForPoint = 50
@@ -56,6 +63,12 @@ class StepScreenVM: ViewModel() {
     }
 
     fun updateUserPoints() {
+        _isLoading.value = true
         _currentUser.value?.points = _points.value!!
+        userRepository.updateUser(_currentUser.value, {
+            _isLoading.value = false
+        }, {error ->
+            _isLoading.value = false
+        })
     }
 }
