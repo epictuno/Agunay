@@ -1,5 +1,6 @@
 package com.project.agunay.adapter.kotlin.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,9 +28,12 @@ fun AppNavigation() {
             RegisterScreen(navController, currentUser, backStackEntry)
         }
         composable(route = AppScreens.MainScreen.route) {backStackEntry ->
-            MainScreen(navController, currentUser, backStackEntry)
+            MainScreen(navController, currentUser,currentQuizz, backStackEntry)
         }
-        composable(route = AppScreens.TriviaScreen.route) { TriviaScreen(navController) }
+        composable(route = AppScreens.TriviaScreen.route) {
+            Log.d("FirebaseQuizzRepository", "Quizz details: " + (currentQuizz.getQuizz()?.questions
+                ?: "NO CURRENT QUIZZ"))
+            TriviaScreen(navController) }
         composable(route = AppScreens.ShopScreen.route) { backStackEntry ->
             ShopScreen(navController, currentUser, backStackEntry) }
         composable(route = AppScreens.ProfileScreen.route) {backStackEntry ->

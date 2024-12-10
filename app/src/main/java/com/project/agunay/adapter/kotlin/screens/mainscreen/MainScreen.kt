@@ -36,6 +36,7 @@ import com.project.agunay.R
 import com.project.agunay.adapter.kotlin.components.BottomButtons
 import com.project.agunay.adapter.kotlin.components.BottomText
 import com.project.agunay.adapter.kotlin.components.WalkQuizSquareButtonWithIcon
+import com.project.agunay.adapter.kotlin.configuration.CurrentQuizz
 import com.project.agunay.adapter.kotlin.configuration.CurrentUser
 import com.project.agunay.adapter.kotlin.navigation.AppScreens
 
@@ -43,6 +44,7 @@ import com.project.agunay.adapter.kotlin.navigation.AppScreens
 fun MainScreen(
     navController: NavController,
     user: CurrentUser,
+    quizz: CurrentQuizz,
     backStackEntry: NavBackStackEntry
 ) {
     val activity = LocalContext.current as Activity
@@ -52,14 +54,14 @@ fun MainScreen(
     val currentUser by viewModel.currentUser.observeAsState()
 
     Column {
-        BodyContent(navController = navController, viewModel = viewModel)
+        BodyContent(navController = navController, viewModel = viewModel, quizz = quizz)
     }
     BackHandler {
         activity.finishAffinity()
     }
 }
 @Composable
-fun BodyContent(navController: NavController, viewModel: MainScreenVM, modifier: Modifier = Modifier) {
+fun BodyContent(navController: NavController, viewModel: MainScreenVM,quizz: CurrentQuizz, modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround,
@@ -70,14 +72,14 @@ fun BodyContent(navController: NavController, viewModel: MainScreenVM, modifier:
             painter = painterResource(R.drawable.iconoapp_principal),
             contentDescription = "Icono de la aplicación"
         )
-        MainScreenButtons(navController, viewModel = viewModel)
+        MainScreenButtons(navController, viewModel = viewModel, quizz = quizz)
         BottomButtons(navController)
         BottomText()
     }
 }
 
 @Composable
-fun MainScreenButtons(navController: NavController, viewModel: MainScreenVM) {
+fun MainScreenButtons(navController: NavController, viewModel: MainScreenVM, quizz: CurrentQuizz) {
     val currentQuizz by viewModel.currentQuizz.observeAsState()
     val isLoading by viewModel.isLoading.observeAsState(false)
     var triviaButtonPressed by remember { mutableStateOf(false) }
@@ -102,7 +104,7 @@ fun MainScreenButtons(navController: NavController, viewModel: MainScreenVM) {
             onClick = {
                 if (!isLoading) {
                     triviaButtonPressed = true
-                    if(currentQuizz==null){viewModel.setCurrentQuizz("Generic")}
+                    if(currentQuizz==null){viewModel.setCurrentQuizz("Generic",quizz)}
                     Log.d("dafuq?", (currentQuizz!=null).toString())
                 }
             },
@@ -137,7 +139,7 @@ fun MainScreenPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             BodyContent(
-                navController = rememberNavController(), MainScreenVM()
+                navController = rememberNavController(), MainScreenVM(), CurrentQuizz()
             )
         }
     }

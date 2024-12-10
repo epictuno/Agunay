@@ -38,7 +38,7 @@ class MainScreenVM(
         _currentUser.postValue(currentUser.getUser())
     }
 
-    fun setCurrentQuizz(name: String) {
+    fun setCurrentQuizz(name: String, quizz: CurrentQuizz) {
         _isLoading.postValue(true)
         _isTriviaActionTriggered.postValue(true)
 
@@ -47,6 +47,7 @@ class MainScreenVM(
             object : SuccessCallback<Quizz> {
                 override fun onComplete(result: Quizz) {
                     _currentQuizz.postValue(result)
+                    quizz.setQuizz(result)
                     _isLoading.postValue(false)
                 }
             },

@@ -41,6 +41,8 @@ public class FirebaseQuizzRepository implements QuizzRepository {
                 if (pictureURL == null || pictureURL.isEmpty()) {
                     callback.onComplete(quizz);
                     Log.d("FirebaseQuizzRepository", "No picture");
+                    Log.d("FirebaseQuizzRepository", "Quizz details: " + quizz.getQuestions().size());
+                    Log.d("FirebaseQuizzRepository", "Quizz details: " + quizz.getQuestions().toString());
                 } else {
                     storage.getImageBytes(pictureURL, bytes -> {
                         quizz.setPicture(bytes);
