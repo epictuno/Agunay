@@ -9,16 +9,30 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlin.math.floor
+import com.project.agunay.adapter.firebase.FirebaseUserRepository
+import com.project.agunay.adapter.kotlin.configuration.CurrentUser
+import com.project.agunay.application.repository.UserRepository
+import com.project.agunay.domain.User
 
-class StepScreenVM: ViewModel() {
+class StepScreenVM(
+    private val userRepository: UserRepository = FirebaseUserRepository()
+): ViewModel() {
     private val _steps = MutableLiveData(0)
     val steps: LiveData<Int> = _steps
 
     private val _points = MutableLiveData(0)
     val points: LiveData<Int> = _points
 
+    private val _currentUser = MutableLiveData<User?>()
+    val currentUser: LiveData<User?> = _currentUser
+
+    private val _isLoading = MutableLiveData<Boolean>(false)
+    val isLoading: LiveData<Boolean> = _isLoading
+
     private var initialSteps = -1
+    private var stepsForPoint = 50
+
+    private var progressToPoint = stepsForPoint
 
     fun initSensor(context: Context) {
         val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -31,12 +45,30 @@ class StepScreenVM: ViewModel() {
                 }
                 val sessionSteps = totalSteps - initialSteps
                 _steps.value = sessionSteps
-                _points.value = floor(sessionSteps.toDouble() / 50).toInt()
+                if (sessionSteps >= progressToPoint) {
+                    _points.value = _points.value?.inc()
+                    progressToPoint += stepsForPoint
+                }
             }
 
             override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
         }
         sensorManager.registerListener(sensorEventListener, stepSensor, SensorManager.SENSOR_DELAY_UI)
         Log.d("steps", "Contador de pasos inicializado")
+    }
+
+    fun setCurrentUser(currentUser: CurrentUser) {
+        _currentUser.postValue(currentUser.getUser())
+        _points.value = currentUser.getUser()?.points
+    }
+
+    fun updateUserPoints() {
+        _isLoading.value = true
+        _currentUser.value?.points = _points.value!!
+        userRepository.updateUser(_currentUser.value, {
+            _isLoading.value = false
+        }, {error ->
+            _isLoading.value = false
+        })
     }
 }

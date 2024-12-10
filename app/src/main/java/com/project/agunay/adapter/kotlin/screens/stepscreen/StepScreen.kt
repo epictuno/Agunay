@@ -3,11 +3,16 @@ package com.project.agunay.adapter.kotlin.screens.stepscreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,30 +42,47 @@ import com.project.agunay.adapter.kotlin.configuration.CurrentUser
 @Composable
 fun StepScreen(
     navController: NavHostController,
-    currentUser: CurrentUser,
+    user: CurrentUser,
     backStackEntry: NavBackStackEntry
 ) {
     val viewModel: StepScreenVM = viewModel(backStackEntry)
 
     val context = LocalContext.current
 
+    viewModel.setCurrentUser(user)
     viewModel.initSensor(context)
 
     val stepState = viewModel.steps.observeAsState()
     val pointState = viewModel.points.observeAsState()
+    val isLoading = viewModel.isLoading.observeAsState()
+    
+    viewModel.setCurrentUser(user)
 
-    BodyContent(navController, stepState, pointState)
+    BodyContent(navController, stepState, pointState, viewModel)
+
+    if (isLoading.value!!) {
+        LoadingDialog()
+    }
 
 }
 
 @Composable
-fun BodyContent(navController: NavHostController, stepState: State<Int?>?, pointState: State<Int?>?) {
+fun BodyContent(
+    navController: NavHostController,
+    stepState: State<Int?>?,
+    pointState: State<Int?>?,
+    viewModel: StepScreenVM?,
+) {
     Scaffold(
         topBar = {
             WalkQuizTopBar(
                 text = R.string.steps_button,
                 icon = R.drawable.step,
-                navController = navController
+                navController = navController,
+                onBackButtonClick = {
+                    viewModel?.updateUserPoints()
+                    navController.navigateUp()
+                }
             )
         }
     ) { innerPadding ->
@@ -125,7 +147,28 @@ fun StepsCard(
 }
 
 @Composable
+fun LoadingDialog() {
+    AlertDialog(
+        icon = {},
+        title = {},
+        text = {
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                CircularProgressIndicator()
+                Text(stringResource(R.string.saving_info))
+            }
+        },
+        onDismissRequest = {},
+        confirmButton = {},
+        dismissButton = {}
+    )
+}
+
+@Composable
 @Preview
 fun StepScreenPreview() {
-    BodyContent(rememberNavController(), null, null)
+    BodyContent(rememberNavController(), null, null, null)
 }
