@@ -26,6 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,8 +39,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.project.agunay.DarkPurple
 import com.project.agunay.R
+import com.project.agunay.adapter.kotlin.components.AchievementCard
 import com.project.agunay.adapter.kotlin.components.BottomButtons
 import com.project.agunay.adapter.kotlin.components.BottomText
+import com.project.agunay.adapter.kotlin.components.asImageBitmap
 import com.project.agunay.adapter.kotlin.components.WalkQuizTopBar
 import com.project.agunay.adapter.kotlin.configuration.CurrentUser
 import com.project.agunay.domain.Achievement
@@ -92,13 +96,28 @@ fun ProfileCard(user: User?) {
             modifier = Modifier
                 .width(350.dp)
         ) {
-            Image(
-                painter = painterResource(R.drawable.default_profile_picture),
-                contentDescription = stringResource(R.string.profile_picture),
-                modifier = Modifier
-                    .size(150.dp)
-                    .clip(CircleShape)
-            )
+            if (user != null) {
+                Image(
+                    bitmap = if (user.profilePicture != null) {
+                        user.profilePicture.asImageBitmap()
+                    } else {
+                        ImageBitmap.imageResource(R.drawable.default_profile_picture)
+                    },
+                    contentDescription = stringResource(R.string.profile_picture),
+                    modifier = Modifier
+                        .size(150.dp)
+                        .clip(CircleShape)
+                )
+            }
+            else{
+                Image(
+                    painter = painterResource(R.drawable.default_profile_picture),
+                    contentDescription = stringResource(R.string.profile_picture),
+                    modifier = Modifier
+                        .size(150.dp)
+                        .clip(CircleShape)
+                )
+            }
             if (user != null) {
                 Text(
                     text = user.username,
@@ -148,9 +167,10 @@ fun AchievementsCard(user: User?) {
         ) {
             if (user != null) {
                 Text(
-                    text = stringResource(R.string.achievements, user.achievements.size, 10),
+                    text = stringResource(R.string.achievements, user.achievements.size, 5),
                     fontSize = fontSize
                 )
+
                 AchievementList(user.achievements)
             }
             else {
@@ -158,7 +178,7 @@ fun AchievementsCard(user: User?) {
                     text = stringResource(R.string.achievements, 1, 10),
                     fontSize = fontSize
                 )
-                AchievementList(arrayListOf())
+                AchievementList(HashSet<Achievement>())
             }
         }
     }
@@ -194,11 +214,13 @@ fun AchievementInfo(
 
 @Composable
 fun AchievementList(
-    achievementList: List<Achievement>
+    achievementSet: Set<Achievement>
 ) {
+    val achievementList = achievementSet.toList()
+
     LazyColumn {
-        items(achievementList) {achievement ->
-            AchievementInfo(achievement.title, R.drawable.placeholder)
+        items(achievementList) { achievement ->
+            AchievementCard(achievement)
         }
     }
     //Implementar que los elementos AchievementInfo se creen a partir de una lista de logros

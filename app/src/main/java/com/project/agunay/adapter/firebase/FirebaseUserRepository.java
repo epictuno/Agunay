@@ -25,9 +25,14 @@ import com.project.agunay.domain.User;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class FirebaseUserRepository implements UserRepository {
@@ -175,23 +180,47 @@ public class FirebaseUserRepository implements UserRepository {
         }
     };
 
-    private void documentToUser(DocumentSnapshot document, SuccessCallback<User> callback, ErrorCallback callError) {
-        String id = document.getId();
-        String email = document.getString("email");
-        String username = document.getString("username");
-        int points = document.getLong("points").intValue();
-        byte[] profilePicture = document.getBlob("profilePicture") != null ? document.getBlob("profilePicture").toBytes() : null;
+    private void documentToUser2(DocumentSnapshot document, SuccessCallback<User> callback, ErrorCallback callError) {
+        try {
+            String id = document.getId();
+            String email = document.getString("email");
+            String username = document.getString("username");
+            int points = document.getLong("points").intValue();
+            String profilePictureUrl = document.getString("profilePicture");
+            if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
+                profilePictureUrl = "/profilePictures/" + profilePictureUrl;
+                storageRepository.getImageBytes(profilePictureUrl, bytes -> {
+                    byte[] profilePicture = bytes;
+                    createUserObject(document, email, username, id, points, profilePicture, callback, callError);
+                }, error -> {
+                    Log.e("documentToUser", "Error al descargar la imagen de perfil: " + error.getMessage());
+                    createUserObject(document, email, username, id, points, null, callback, callError);
+                });
+            } else {
+                createUserObject(document, email, username, id, points, null, callback, callError);
+            }
+        } catch (Exception e) {
+            Log.e("documentToUser", "Error al procesar el usuario: " + e.getMessage());
+            callError.onError(e);
+        }
+    }
 
-        // Obtener todos los logros y artículos de la tienda
+    private void createUserObject(DocumentSnapshot document, String email, String username, String id, int points, byte[] profilePicture, SuccessCallback<User> callback, ErrorCallback callError) {
+        User user = new User(email, "", username, id, points, new HashSet<>(), new HashMap<>(), profilePicture);
+
         achievementRepository.getAllAchievements(achievements -> {
-            shopItemRepository.getAllShopItems(shopItems -> {
-                // Convertir la lista de IDs de logros a objetos Achievement
-                List<String> achievementIds = (List<String>) document.get("achievements");
-                List<Achievement> userAchievements = (achievementIds != null) ? achievements.stream()
-                        .filter(achievement -> achievementIds.contains(achievement.getId()))
-                        .collect(Collectors.toList()) : new ArrayList<>();
+            List<String> achievementIds = (List<String>) document.get("achievements");
+            Set<Achievement> userAchievements = (achievementIds != null) ? achievements.stream()
+                    .filter(achievement -> achievementIds.contains(achievement.getId()))
+                    .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Achievement::getId))))
+                    : new HashSet<>();
+            Log.d("documentToShopItem", "logros para usuario: " + userAchievements.toString());
+            Log.d("documentToShopItem", "logros: " + achievements.toString());
+            Log.d("documentToShopItem", String.valueOf(("logrosIDS:" + (Arrays.toString(achievements.get(0).getPicture())))));
+            Log.d("documentToShopItem", "logrosSIZE: " + achievementIds.size());
+            user.setAchievements(userAchievements);
 
-                // Convertir la lista de mapas de inventario a objetos ShopItem con cantidad
+            shopItemRepository.getAllShopItems(shopItems -> {
                 List<Map<String, Object>> inventoryList = (List<Map<String, Object>>) document.get("inventory");
                 Map<ShopItem, Integer> inventory = new HashMap<>();
                 if (inventoryList != null) {
@@ -204,57 +233,11 @@ public class FirebaseUserRepository implements UserRepository {
                                 .ifPresent(item -> inventory.put(item, quantity));
                     }
                 }
-
-                User user = new User(email, "", username, id, points, userAchievements, inventory, profilePicture);
+                user.setInventory(inventory);
+                // Se devuelve el usuario con todo hecho
                 callback.onComplete(user);
             }, callError);
         }, callError);
-    }
-
-    private void documentToUser2(DocumentSnapshot document, SuccessCallback<User> callback, ErrorCallback callError) {
-        try {
-            // Extraer datos básicos del usuario
-            String id = document.getId();
-            String email = document.getString("email");
-            String username = document.getString("username");
-            int points = document.getLong("points").intValue();
-            byte[] profilePicture = document.getBlob("profilePicture") != null ? document.getBlob("profilePicture").toBytes() : null;
-
-            // Preparar usuario inicial (sin logros ni inventario)
-            User user = new User(email, "", username, id, points, new ArrayList<>(), new HashMap<>(), profilePicture);
-
-            // Cargar logros y artículos de inventario de manera independiente
-            achievementRepository.getAllAchievements(achievements -> {
-                List<String> achievementIds = (List<String>) document.get("achievements");
-                List<Achievement> userAchievements = (achievementIds != null) ? achievements.stream()
-                        .filter(achievement -> achievementIds.contains(achievement.getId()))
-                        .collect(Collectors.toList()) : new ArrayList<>();
-                user.setAchievements(userAchievements);
-
-                // Cargar inventario
-                shopItemRepository.getAllShopItems(shopItems -> {
-                    List<Map<String, Object>> inventoryList = (List<Map<String, Object>>) document.get("inventory");
-                    Map<ShopItem, Integer> inventory = new HashMap<>();
-                    if (inventoryList != null) {
-                        for (Map<String, Object> itemMap : inventoryList) {
-                            String itemId = (String) itemMap.get("id");
-                            int quantity = ((Long) itemMap.get("quantity")).intValue();
-                            shopItems.stream()
-                                    .filter(item -> item.getId().equals(itemId))
-                                    .findFirst()
-                                    .ifPresent(item -> inventory.put(item, quantity));
-                        }
-                    }
-                    user.setInventory(inventory);
-
-                    // Callback final con el usuario completo
-                    callback.onComplete(user);
-                }, callError);
-            }, callError);
-        } catch (Exception e) {
-            Log.e("documentToUser", "Error al procesar el usuario: " + e.getMessage());
-            callError.onError(e);
-        }
     }
 
     private Map<String, Object> userToMap(User user) {
@@ -265,12 +248,12 @@ public class FirebaseUserRepository implements UserRepository {
         userMap.put("profilePicture", user.getProfilePicture());
         userMap.put("username", user.getUsername());
 
-        //list of IDs
+        //se guarda la lista de id de los logros obtenidos
         List<String> achievementIds = user.getAchievements().stream()
                 .map(Achievement::getId)
                 .collect(Collectors.toList());
         userMap.put("achievements", achievementIds);
-        //list of maps with shop item ID and quantity
+        //transformacion a mapa de objetos de usuario {id: id_objeto, quantity: numero_objetos}
         List<Map<String, Object>> inventoryList = user.getInventory().entrySet().stream()
                 .map(entry -> {
                     Map<String, Object> itemMap = new HashMap<>();

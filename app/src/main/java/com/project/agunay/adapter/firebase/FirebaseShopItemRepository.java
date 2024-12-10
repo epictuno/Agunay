@@ -52,18 +52,18 @@ public class FirebaseShopItemRepository implements ShopItemRepository {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
                     List<ShopItem> shopItems = new ArrayList<>();
-                    AtomicInteger counter = new AtomicInteger(documents.size()); // Contador para manejar el flujo asincrónico
+                    AtomicInteger counter = new AtomicInteger(documents.size());
 
                     for (DocumentSnapshot document : documents) {
                         documentToShopItem(document, shopItem -> {
-                            shopItems.add(shopItem); // Agregar el ShopItem a la lista
+                            shopItems.add(shopItem);
                             if (counter.decrementAndGet() == 0) {
-                                callback.onComplete(shopItems); // Ejecutar callback cuando todos los items estén listos
+                                callback.onComplete(shopItems);
                             }
                         }, error -> {
                             Log.e("getAllShopItems", "Error procesando ShopItem: " + error.getMessage());
                             if (counter.decrementAndGet() == 0) {
-                                callback.onComplete(shopItems); // Retornar los que sí se procesaron
+                                callback.onComplete(shopItems);
                             }
                         });
                     }
@@ -73,58 +73,37 @@ public class FirebaseShopItemRepository implements ShopItemRepository {
 
     public void documentToShopItem(DocumentSnapshot document, SuccessCallback<ShopItem> callback, ErrorCallback callError) {
         try {
-            // Extraer datos del documento Firestore
             String id = document.getId();
             String name = document.getString("name");
             String description = document.getString("description");
             int price = document.getLong("price").intValue();
-            String pictureURL = document.getString("pictureURL"); // Ruta de la imagen en el storage.
-
-            // Validar URL de imagen
+            String pictureURL = document.getString("pictureURL");
             if (pictureURL == null || pictureURL.isEmpty()) {
                 Log.e("documentToShopItem", "URL de la imagen vacía o nula para ShopItem con ID: " + id);
                 ShopItem shopItem = new ShopItem(id, name, price, null, description);
-                callback.onComplete(shopItem); // Retornar el objeto sin imagen.
+                callback.onComplete(shopItem);
                 return;
             }
-
-            // Descargar la imagen desde Firebase Storage
             storage.getImageBytes(pictureURL, bytes -> {
                 try {
-                    // Crear ShopItem con la imagen descargada
                     ShopItem shopItemWithImage = new ShopItem(id, name, price, bytes, description);
                     callback.onComplete(shopItemWithImage); // Retornar el ShopItem completo.
                     Log.d("documentToShopItem", "Imagen descargada correctamente para ShopItem con ID: " + id);
                 } catch (Exception e) {
                     Log.e("documentToShopItem", "Error al crear ShopItem con imagen: " + e.getMessage());
-                    // En caso de error, retornar un ShopItem sin imagen
                     ShopItem shopItem = new ShopItem(id, name, price, null, description);
                     callback.onComplete(shopItem);
                 }
             }, error -> {
                 Log.e("documentToShopItem", "Error al descargar la imagen para ShopItem con ID: " + id + ". Error: " + error.getMessage());
-                // En caso de error al descargar la imagen, retornar un ShopItem sin imagen
                 ShopItem shopItem = new ShopItem(id, name, price, null, description);
                 callback.onComplete(shopItem);
             });
 
         } catch (Exception ex) {
             Log.e("documentToShopItem", "Error general al procesar ShopItem: " + ex.getMessage());
-            // En caso de error general, retornar un ShopItem con información básica de error
             ShopItem shopItem = new ShopItem("Unknown", ex.getMessage(), 0, null, "Error creating ShopItem");
             callback.onComplete(shopItem);
-        }
-    }
-    private byte[] loadSampleImage() {
-        try {
-            InputStream inputStream = getClass().getResourceAsStream("/res/raw/falser.jpg");
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-            return byteArrayOutputStream.toByteArray();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
         }
     }
 

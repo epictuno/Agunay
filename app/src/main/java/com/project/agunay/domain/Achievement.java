@@ -46,4 +46,21 @@ public class Achievement {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Achievement that = (Achievement) obj;
+        return id != null && id.equals(that.id);
+    }
 }

@@ -6,7 +6,6 @@ public class Question {
     private String questionType;
     private List<Answer> answers;
 
-    // Constructor vacío
     public Question() {
     }
 
@@ -17,7 +16,6 @@ public class Question {
         this.answers = answers;
     }
 
-    // Getters y Setters
     public String getQuestionTitle() {
         return questionTitle;
     }

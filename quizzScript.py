@@ -6,22 +6,23 @@ db = firestore.client()
 
 def guardar_cuestionario(cuestionario):
     collection_name = 'Quizzes'
-    doc_ref = db.collection(collection_name).document(cuestionario['nombre'])
+    doc_ref = db.collection(collection_name).document(cuestionario['name'])
     doc_ref.set(cuestionario)
-    print(f"Cuestionario {cuestionario['nombre']} guardado exitosamente")
+    print(f"Cuestionario {cuestionario['name']} guardado exitosamente")
 
 # Ejemplo de uso
 cuestionario = {
-    "nombre": "Generic",
-    "idioma": "ES",
-    "preguntas": [
+    "name": "Generic",
+    "language": "ES",
+    "questions": [
         {
-            "questionTitle": "¿Cuál es la capital de España?",
+            "questionTitle":  "¿Que influencer es más conocido por gestionar torneos?",
             "questionType": "SingleChoice",
             "answers": [
-                {"isAnswer": False, "answerText": "Barcelona"},
-                {"isAnswer": True, "answerText": "Madrid"},
-                {"isAnswer": False, "answerText": "Valencia"}
+                {"isAnswer": False, "answerText": "Loulogio"},
+                {"isAnswer": True, "answerText": "Mr Beast"},
+                {"isAnswer": False, "answerText": "PewDiePie"},
+                {"isAnswer": False, "answerText": "ElRubiusOMG"}
             ]
         },
         {

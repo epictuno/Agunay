@@ -2,11 +2,12 @@ package com.project.agunay.domain;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class User {
     private String id;
     private int points;
-    private List<Achievement> achievements;
+    private Set<Achievement> achievements;
     private String email;
     private Map<ShopItem, Integer> inventory;
     private byte[] profilePicture;
@@ -18,7 +19,7 @@ public class User {
         this.password = password;
     }
 
-    public User(String email, String password, String username, String id, int points, List<Achievement> achievements, Map<ShopItem, Integer> inventory, byte[] profilePicture) {
+    public User(String email, String password, String username, String id, int points, Set<Achievement> achievements, Map<ShopItem, Integer> inventory, byte[] profilePicture) {
         this(email,password,username);
         this.id = id;
         this.points = points;
@@ -43,11 +44,11 @@ public class User {
         this.points = points;
     }
 
-    public List<Achievement> getAchievements() {
+    public Set<Achievement> getAchievements() {
         return achievements;
     }
 
-    public void setAchievements(List<Achievement> achievements) {
+    public void setAchievements(Set<Achievement> achievements) {
         this.achievements = achievements;
     }
 

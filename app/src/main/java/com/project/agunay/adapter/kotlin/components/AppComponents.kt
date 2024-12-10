@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
@@ -23,7 +24,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.filled.*
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -31,6 +31,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -74,6 +75,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -94,6 +96,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.project.agunay.R
 import com.project.agunay.adapter.kotlin.navigation.AppScreens
+import com.project.agunay.domain.Achievement
 import com.project.agunay.domain.ShopItem
 import com.project.agunay.ui.theme.DarkGreen
 import com.project.agunay.ui.theme.DarkGrey
@@ -528,21 +531,23 @@ fun ConfirmDialog(
 
 @Composable
 fun AchievementCard(
-    title: String,
-    description: String,
-    image: Painter,
+    achievement: Achievement,
     modifier: Modifier = Modifier
 ){
+    Log.d("achiCard", "logro: " + achievement.id+ " "+ achievement.picture)
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Image(painter = image,
-            //painter = painterResource(id = R.drawable.default_profile_pic),
+        Image(bitmap = if (achievement.picture != null) {
+            achievement.picture.asImageBitmap()
+        } else {
+            ImageBitmap.imageResource(R.drawable.placeholder)
+        },
             contentDescription = "Achievement image",
             modifier = Modifier.size(60.dp))
         Column(modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp), horizontalAlignment = Alignment.Start){
-            Text(text = title, color = Color.Black, fontSize = 20.sp)
-            Text(text = description, color = Color.Black, fontSize = 16.sp)
+            Text(text = achievement.title, color = Color.Black, fontSize = 20.sp)
+            Text(text = achievement.description, color = Color.Black, fontSize = 16.sp)
         }
     }
 }
