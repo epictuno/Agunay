@@ -835,6 +835,11 @@ fun ShopElement(
                 fontSize = fontSize,
                 color = ButtonTextColor
             )
+            Text(
+                text = shopItem.price.toString(),
+                fontSize = fontSize,
+                color = ButtonTextColor
+            )
             Row {
                 Button(
                     onClick = { showDialog = true },

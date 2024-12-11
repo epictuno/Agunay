@@ -5,9 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.project.agunay.adapter.firebase.ErrorCallback
+import com.project.agunay.adapter.firebase.FirebaseAchievementRepository
 import com.project.agunay.adapter.firebase.FirebaseShopItemRepository
 import com.project.agunay.adapter.firebase.FirebaseUserRepository
 import com.project.agunay.adapter.firebase.SuccessCallback
+import com.project.agunay.application.repository.AchievementRepository
 import com.project.agunay.application.repository.ShopItemRepository
 import com.project.agunay.application.repository.UserRepository
 import com.project.agunay.domain.ShopItem
@@ -15,7 +17,8 @@ import com.project.agunay.domain.User
 
 class ShopScreenVM(
     private val userRepository: UserRepository = FirebaseUserRepository(),
-    private val shopItemRepository: ShopItemRepository = FirebaseShopItemRepository()
+    private val shopItemRepository: ShopItemRepository = FirebaseShopItemRepository(),
+    private val achiRepository: AchievementRepository = FirebaseAchievementRepository()
 ) : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
@@ -52,19 +55,42 @@ class ShopScreenVM(
 
             val inventory = user.inventory
             val existingItem = inventory.entries.find { it.key.id == item.id }
+            val achievementId = "xdICdG8eCgn3j2Z0hWJC"
+            val hasAchievement = user.achievements.any { it.id == achievementId }
 
-            if (existingItem != null) {
-                inventory[existingItem.key] = existingItem.value + 1
+            if (!hasAchievement) {
+                achiRepository.getAchievementById(achievementId, { achievement ->
+                    user.achievements.add(achievement)
+                    if (existingItem != null) {
+                        inventory[existingItem.key] = existingItem.value + 1
+                    } else {
+                        inventory[item] = 1
+                    }
+                    user.inventory = inventory
+                    userRepository.updateUser(user, {
+                        _isLoading.value = false
+                    }, { error ->
+                        _error.value = error.message
+                        _isLoading.value = false
+                    })
+                }, { error ->
+                    _error.value = error.message
+                    _isLoading.value = false
+                })
             } else {
-                inventory[item] = 1
+                if (existingItem != null) {
+                    inventory[existingItem.key] = existingItem.value + 1
+                } else {
+                    inventory[item] = 1
+                }
+                user.inventory = inventory
+                userRepository.updateUser(user, {
+                    _isLoading.value = false
+                }, { error ->
+                    _error.value = error.message
+                    _isLoading.value = false
+                })
             }
-            user.inventory = inventory
-            userRepository.updateUser(user, {
-                _isLoading.value = false
-            }, { error ->
-                _error.value = error.message
-                _isLoading.value = false
-            })
         } else {
             _error.value = "Not enough points"
             _isLoading.value = false
