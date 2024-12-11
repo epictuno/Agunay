@@ -114,7 +114,7 @@ fun showInventory(currentQuestion: Question?, currentQuizz: Quizz?, currentUser:
     if (currentUser != null) {
         val inventory = currentUser.inventory.entries.toList()
         var showDialog by remember { mutableStateOf(false) }
-        WalkQuizSquareButtonWithIconComposable(
+        WalkQuizSquareButtonWithIcon(
             onClick = { showDialog = true },
             icon = R.drawable.shop_object,
             text = stringResource(R.string.use_object_button)
