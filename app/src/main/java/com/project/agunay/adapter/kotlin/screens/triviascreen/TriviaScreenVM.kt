@@ -82,8 +82,17 @@ class TriviaScreenVM: ViewModel() {
                     currentQuizz.value?.removeQuestion(currentQuestion.value)
                 }
                 else {
-                    _markedAnswers.value?.set(answerNumber, true)
-                    _currentMarkedAnswers.value = _currentMarkedAnswers.value?.inc()
+                    if (_markedAnswers.value?.get(answerNumber) == false) {
+                        _markedAnswers.value?.set(answerNumber, true)
+                        _currentMarkedAnswers.value = _currentMarkedAnswers.value?.inc()
+                    }
+                    if (_currentMarkedAnswers.value == _currentQuestion.value?.numberOfAnswers) {
+                        _questionAnswered.value = true
+                        _showQuestionAnswers.value = true
+                        _currentQuizz.value?.correctAnswers = _currentQuizz.value?.correctAnswers?.inc()!!
+                        _currentQuizz.value?.correctQuestions?.add(currentQuestion.value)
+                        currentQuizz.value?.removeQuestion(currentQuestion.value)
+                    }
                 }
             }
         }
