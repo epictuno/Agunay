@@ -26,12 +26,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.agunay.ui.theme.AgunayTheme
+import com.project.agunay.ui.theme.AgunayTheme
 import com.project.agunay.R
 import com.project.agunay.adapter.kotlin.components.BottomButtons
 import com.project.agunay.adapter.kotlin.components.BottomText

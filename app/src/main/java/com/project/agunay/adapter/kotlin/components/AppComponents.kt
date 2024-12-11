@@ -31,7 +31,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.FormatListBulleted
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.materialIcon
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -98,9 +100,13 @@ import com.project.agunay.R
 import com.project.agunay.adapter.kotlin.navigation.AppScreens
 import com.project.agunay.domain.Achievement
 import com.project.agunay.domain.ShopItem
+import com.project.agunay.ui.theme.ButtonColor
+import com.project.agunay.ui.theme.ButtonTextColor
 import com.project.agunay.ui.theme.DarkGreen
 import com.project.agunay.ui.theme.DarkGrey
 import com.project.agunay.ui.theme.LightGrey
+import com.project.agunay.ui.theme.Purple40
+import com.project.agunay.ui.theme.PurpleGrey80
 import com.project.agunay.ui.theme.SaturatedGreen
 
 @Composable
@@ -546,8 +552,8 @@ fun AchievementCard(
         Column(modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp), horizontalAlignment = Alignment.Start){
-            Text(text = achievement.title, color = Color.Black, fontSize = 20.sp)
-            Text(text = achievement.description, color = Color.Black, fontSize = 16.sp)
+            Text(text = achievement.title, color = Color.White, fontSize = 20.sp)
+            Text(text = achievement.description, color = Color.White, fontSize = 16.sp)
         }
     }
 }
@@ -628,7 +634,7 @@ fun WalkQuizSquareButtonWithIcon(
 ) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = LightGrey),
+        colors = ButtonDefaults.buttonColors(containerColor = ButtonColor ),
         modifier = Modifier
             .width(width)
             .padding(0.dp, 8.dp)
@@ -643,7 +649,7 @@ fun WalkQuizSquareButtonWithIcon(
             text = text,
             modifier = Modifier.padding(4.dp),
             fontSize = 24.sp,
-            color = Color.Black
+            color = ButtonTextColor
         )
     }
 }
@@ -700,13 +706,12 @@ fun WalkQuizRoundButton(
 ) {
     IconButton(
         onClick = onClick,
-        colors = IconButtonDefaults.iconButtonColors(containerColor = LightGrey),
+        colors = IconButtonDefaults.iconButtonColors(containerColor = ButtonColor),
         modifier = Modifier.size(64.dp)
     ) {
         Icon(
             painterResource(icon),
             contentDescription = contentDescription,
-            tint = Color.Black,
             modifier = Modifier.size(48.dp)
         )
     }
@@ -759,11 +764,13 @@ fun WalkQuizTopBar(
 ) {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(0xFF9B9B9B),
+
+            containerColor = Color(0xFF4682B4),
             titleContentColor = Color.Black
         ),
         title = {
             Row(
+
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -792,11 +799,16 @@ fun ShopElement(
     shopItem: ShopItem,
     onRightButtonClick: () -> Unit,
 ) {
-    val fontSize = 12.sp
+    val fontSize = 22.sp
+    val fontSizeButton = 16.sp
     var showDialog by remember { mutableStateOf(false) }
+
 
     Card {
         Column(
+            modifier = Modifier
+                .width(320.dp)
+                .background(PurpleGrey80),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             if (shopItem.image != null) {
@@ -814,7 +826,8 @@ fun ShopElement(
             }
             Text(
                 text = shopItem.name,
-                fontSize = fontSize
+                fontSize = fontSize,
+                color = ButtonTextColor
             )
             Row {
                 Button(
@@ -822,17 +835,26 @@ fun ShopElement(
                     modifier = Modifier
                         .padding(1.dp)
                 ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.FormatListBulleted,
+                        contentDescription = "details icon"
+                    )
+
                     Text(stringResource(R.string.shop_element_details), fontSize = fontSize)
                 }
                 Button(
                     onClick = onRightButtonClick,
                 ) {
-                    Text("Comprar", fontSize = fontSize)
+                    Icon(
+                        painterResource(R.drawable.cash_register),
+                        contentDescription = "buy icon"
+                    )
+                    Text(" Comprar", fontSize = fontSize)
                 }
             }
         }
-    }
 
+    }
     if (showDialog) {
         detailsDialog(
             shopItem = shopItem,

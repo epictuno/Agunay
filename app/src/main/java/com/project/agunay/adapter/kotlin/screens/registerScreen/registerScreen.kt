@@ -10,9 +10,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.materialIcon
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -39,7 +39,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.agunay.ui.theme.AgunayTheme
+import com.project.agunay.ui.theme.AgunayTheme
 import com.project.agunay.R
 import com.project.agunay.adapter.kotlin.components.WalkQuizCheckbox
 import com.project.agunay.adapter.kotlin.components.WalkQuizSquareButtonWithIcon
@@ -74,15 +74,14 @@ fun BodyContent(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center, // Asegura que los elementos estén centrados
+        verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxSize()
     ) {
         Image(
             painter = painterResource(R.drawable.iconoapp_principal),
             contentDescription = "Icono de la aplicación",
-            //modifier = Modifier.size(120.dp) // Puedes ajustar el tamaño
         )
-        Spacer(modifier = Modifier.height(32.dp)) // Espacio entre imagen y formulario
+        Spacer(modifier = Modifier.height(32.dp))
 
         RegistrationScreen(viewModel = userViewModel, navController = navController)
     }
@@ -207,7 +206,7 @@ fun RegistrationScreen(viewModel: registerScreenVM, navController: NavController
                     }
                 }
             },
-            icon = R.drawable.step,
+            icon = R.drawable.account_plus,
             text = stringResource(R.string.register)
         )
         LaunchedEffect(currentUser) {

@@ -33,16 +33,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.agunay.ui.theme.AgunayTheme
+import com.project.agunay.ui.theme.AgunayTheme
 import com.project.agunay.R
 import com.project.agunay.adapter.kotlin.components.WalkQuizSquareButtonWithIcon
 import com.project.agunay.adapter.kotlin.components.WalkQuizTextField
 import com.project.agunay.adapter.kotlin.configuration.CurrentUser
 import com.project.agunay.adapter.kotlin.navigation.AppScreens
+import com.project.agunay.ui.theme.LinkColor
 
 @Composable
 fun LoginScreen(
@@ -103,6 +105,18 @@ fun LoginScreenContent(
     val isLoading by viewModel.isLoading.observeAsState(false)
 
     Column(modifier = Modifier.padding(16.dp)) {
+        if (isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.width(100.dp),
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
+            }
+        } else{
         WalkQuizTextField(
             value = userInput,
             onValueChange = {
@@ -135,19 +149,6 @@ fun LoginScreenContent(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        if (isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.width(100.dp),
-                    color = MaterialTheme.colorScheme.secondary,
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                )
-            }
-        } else {
             WalkQuizSquareButtonWithIcon(
                 onClick = {
                     if ((userInput.isValidEmail() || userInput.isValidUsername()) && password.isValidPassword()) {
@@ -165,18 +166,14 @@ fun LoginScreenContent(
                         }
                     }
                 },
-                icon = R.drawable.step,
+                icon = R.drawable.login_variant,
                 text = stringResource(R.string.login_button)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextButton(onClick = {
-                navController.navigate(AppScreens.RegisterScreen.route)
-            }) {
-                Text(text = stringResource(R.string.no_account_register))
-            }
         }
+
 
         LaunchedEffect(currentUser) {
             currentUser?.let {
@@ -204,6 +201,13 @@ fun LoginScreenContent(
                 }
             )
         }
+    }
+    TextButton(onClick = {
+        navController.navigate(AppScreens.RegisterScreen.route)
+    }) {
+        Text(text = stringResource(R.string.no_account_register),
+            color = LinkColor,
+            fontSize = 20.sp)
     }
 }
 
