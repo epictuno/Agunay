@@ -61,4 +61,6 @@ public class ShopItem {
     public void setImage(byte[] image) {
         this.image = image;
     }
+
+
 }

@@ -9,12 +9,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,12 +39,16 @@ import com.project.agunay.DarkPurple
 import com.project.agunay.R
 import com.project.agunay.adapter.kotlin.components.BottomText
 import com.project.agunay.adapter.kotlin.components.WalkQuizSquareButtonWithIcon
+import com.project.agunay.adapter.kotlin.components.WalkQuizSquareButtonWithIconComposable
 import com.project.agunay.adapter.kotlin.components.WalkQuizSquareButtonWithImage
 import com.project.agunay.adapter.kotlin.components.WalkQuizTopBar
+import com.project.agunay.adapter.kotlin.components.invetoryElement
 import com.project.agunay.adapter.kotlin.configuration.CurrentQuizz
 import com.project.agunay.adapter.kotlin.configuration.CurrentUser
 import com.project.agunay.domain.Question
 import com.project.agunay.domain.Quizz
+import com.project.agunay.domain.ShopItem
+import com.project.agunay.domain.User
 
 @Composable
 fun TriviaScreen(
@@ -57,7 +70,7 @@ fun TriviaScreen(
 
     viewModel.getQuestion()
 
-    BodyContent(navController, currentQuestion.value, currentQuizz.value, markedAnswers, viewModel)
+    BodyContent(navController, currentQuestion.value, currentQuizz.value,currentUser.value, markedAnswers, viewModel)
     Log.d("QuizDebug", "Pantalla cargada")
 }
 
@@ -66,6 +79,7 @@ fun BodyContent(
     navController: NavHostController,
     currentQuestion: Question?,
     currentQuizz: Quizz?,
+    currentUser: User?,
     markedAnswers: State<ArrayList<Boolean>?>?,
     viewModel: TriviaScreenVM?
 ) {
@@ -88,16 +102,57 @@ fun BodyContent(
         ) {
             TriviaInfoCard(currentQuizz, Modifier.padding(8.dp))
             QuestionCard(currentQuestion,Modifier.padding(8.dp))
-            WalkQuizSquareButtonWithIcon(
-                onClick = {},
-                icon = R.drawable.shop_object,
-                text = stringResource(R.string.use_object_button),
-            )
+            showInventory(currentQuestion,currentQuizz,currentUser, viewModel!!)
             AnswerButtons(question = currentQuestion, viewModel = viewModel, markedAnswers = markedAnswers?.value)
             BottomText()
         }
     }
 }
+
+@Composable
+fun showInventory(currentQuestion: Question?, currentQuizz: Quizz?, currentUser: User?, viewModel: TriviaScreenVM, modifier: Modifier = Modifier) {
+    if (currentUser != null) {
+        val inventory = currentUser.inventory.entries.toList()
+        var showDialog by remember { mutableStateOf(false) }
+        WalkQuizSquareButtonWithIconComposable(
+            onClick = { showDialog = true },
+            icon = R.drawable.shop_object,
+            text = stringResource(R.string.use_object_button)
+        )
+
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = {
+                    Text(text = "Inventario")
+                },
+                text = {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(600.dp)
+                    ) {
+                        items(inventory) { entry ->
+                            invetoryElement(
+                                shopItem = entry.key,
+                                quantity = entry.value,
+                                onRightButtonClick = { viewModel.usarItem(entry) }
+                            )
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { showDialog = false }) {
+                        Text(text = stringResource(R.string.close_dialog))
+                    }
+                }
+            )
+        }
+    }
+}
+
 
 @Composable
 fun AnswerButtons(
@@ -257,5 +312,5 @@ fun TriviaInfoCard(currentQuizz: Quizz?, modifier: Modifier = Modifier) {
 @Composable
 @Preview
 fun TriviaScreenPreview() {
-    BodyContent(rememberNavController(), null, null, null, null)
+    BodyContent(rememberNavController(), null, null, null, null,null)
 }

@@ -61,6 +61,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -108,6 +109,7 @@ import com.project.agunay.ui.theme.LightGrey
 import com.project.agunay.ui.theme.Purple40
 import com.project.agunay.ui.theme.PurpleGrey80
 import com.project.agunay.ui.theme.SaturatedGreen
+import kotlinx.coroutines.launch
 
 @Composable
 fun WalkQuizTransparentButton(
@@ -655,6 +657,42 @@ fun WalkQuizSquareButtonWithIcon(
 }
 
 @Composable
+fun WalkQuizSquareButtonWithIconComposable(
+    onClick: @Composable () -> Unit,
+    @DrawableRes icon: Int,
+    text: String,
+    contentDescription: String = "",
+    width: Dp = 256.dp
+) {
+    var showComposable by remember { mutableStateOf(false) }
+
+    Button(
+        onClick = { showComposable = true },
+        colors = ButtonDefaults.buttonColors(containerColor = ButtonColor),
+        modifier = Modifier
+            .width(width)
+            .padding(0.dp, 8.dp)
+    ) {
+        Icon(
+            painter = painterResource(icon),
+            contentDescription = contentDescription,
+            tint = Color.Black,
+            modifier = Modifier.size(48.dp)
+        )
+        Text(
+            text = text,
+            modifier = Modifier.padding(4.dp),
+            fontSize = 24.sp,
+            color = ButtonTextColor
+        )
+    }
+
+    if (showComposable) {
+        onClick()
+    }
+}
+
+@Composable
 fun WalkQuizSquareButtonWithImage(
     onClick: () -> Unit,
     @DrawableRes image: Int,
@@ -876,6 +914,79 @@ fun ShopElement(
 
 fun ByteArray.asImageBitmap(): ImageBitmap {
     return BitmapFactory.decodeByteArray(this, 0, this.size).asImageBitmap()
+}
+
+@Composable
+fun invetoryElement(
+    shopItem: ShopItem,
+    quantity: Int,
+    onRightButtonClick: () -> Unit,
+) {
+    val fontSize = 22.sp
+    val fontSizeButton = 16.sp
+    var showDialog by remember { mutableStateOf(false) }
+
+    Card {
+        Column(
+            modifier = Modifier
+                .width(320.dp)
+                .background(PurpleGrey80),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            if (shopItem.image != null) {
+                Image(
+                    bitmap = shopItem.image.asImageBitmap(),
+                    contentDescription = shopItem.name,
+                    modifier = Modifier.size(64.dp)
+                )
+            } else {
+                Image(
+                    painter = painterResource(R.drawable.placeholder),
+                    contentDescription = shopItem.name,
+                    modifier = Modifier.size(64.dp)
+                )
+            }
+            Text(
+                text = shopItem.name,
+                fontSize = fontSize,
+                color = ButtonTextColor
+            )
+            Text(
+                text = "Cantidad: $quantity",
+                fontSize = fontSize,
+                color = ButtonTextColor
+            )
+            Row {
+                Button(
+                    onClick = { showDialog = true },
+                    modifier = Modifier
+                        .padding(1.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.FormatListBulleted,
+                        contentDescription = "details icon"
+                    )
+
+                    Text(stringResource(R.string.shop_element_details), fontSize = fontSize)
+                }
+                Button(
+                    onClick = onRightButtonClick,
+                ) {
+                    Icon(
+                        painterResource(R.drawable.cash_register),
+                        contentDescription = "use icon"
+                    )
+                    Text(" Usar", fontSize = fontSize)
+                }
+            }
+        }
+    }
+    if (showDialog) {
+        detailsDialog(
+            shopItem = shopItem,
+            onDismiss = { showDialog = false }
+        )
+    }
 }
 
 @Composable

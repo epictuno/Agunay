@@ -8,6 +8,7 @@ import com.project.agunay.adapter.kotlin.configuration.CurrentQuizz
 import com.project.agunay.adapter.kotlin.configuration.CurrentUser
 import com.project.agunay.domain.Question
 import com.project.agunay.domain.Quizz
+import com.project.agunay.domain.ShopItem
 import com.project.agunay.domain.User
 
 class TriviaScreenVM: ViewModel() {
@@ -101,6 +102,18 @@ class TriviaScreenVM: ViewModel() {
             _shuffleAnswers.value = true
             _markedAnswers.value = arrayListOf(false, false, false, false)
             getQuestion()
+        }
+    }
+    fun usarItem(item: Map.Entry<ShopItem, Int>) {
+        if (item.key.id == "LSMw4NpgEqOTZE9jm5Un") {
+            val currentQuestion = _currentQuestion.value
+            if (currentQuestion != null) {
+                val incorrectAnswers = currentQuestion.answers.filter { !it.isAnswer }
+                if (incorrectAnswers.isNotEmpty()) {
+                    currentQuestion.answers.remove(incorrectAnswers.random())
+                    _currentQuestion.value = currentQuestion!!
+                }
+            }
         }
     }
 }
