@@ -654,11 +654,26 @@ fun WalkQuizSquareButtonWithImage(
     @DrawableRes image: Int,
     text: String,
     contentDescription: String = "",
-    width: Dp = 256.dp
+    width: Dp = 256.dp,
+    isAnswer: Boolean = false,
+    showAnswer: Boolean? = false
 ) {
+    val buttonColor: Color
+    if (showAnswer == true) {
+        if (isAnswer) {
+            buttonColor = Color.Green
+        }
+        else {
+            buttonColor = Color.Red
+        }
+    }
+    else {
+        buttonColor = LightGrey
+    }
+
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = LightGrey),
+        colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
         modifier = Modifier
             .width(width)
             .padding(0.dp, 8.dp)

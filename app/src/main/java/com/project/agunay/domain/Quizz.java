@@ -50,6 +50,18 @@ public class Quizz {
         return correctAnswers;
     }
 
+    public int getAnsweredQuestions() { return correctQuestions.size() + wrongQuestions.size(); }
+
+    public List<Question> getAnsweredQuestionsList() {
+        List<Question> questionList = new ArrayList<>(correctQuestions);
+        questionList.addAll(wrongQuestions);
+        return questionList;
+    }
+
+    public void removeQuestion(Question question) {
+        this.questions.remove(question);
+    }
+
     public void setCorrectAnswers(int correctAnswers) {
         this.correctAnswers = correctAnswers;
     }

@@ -41,4 +41,6 @@
     <string name="shopDetails">"Details of: "</string>
     <string name="error_title">An error has ocurred</string>
     <string name="saving_info">Guardando información</string>
+    <string name="correct_answers">Correctas: %d</string>
+    <string name="actual_question_number">Pregunta %d de %d</string>
 </resources>

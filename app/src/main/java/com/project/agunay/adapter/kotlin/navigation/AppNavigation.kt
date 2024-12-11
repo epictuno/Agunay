@@ -30,10 +30,10 @@ fun AppNavigation() {
         composable(route = AppScreens.MainScreen.route) {backStackEntry ->
             MainScreen(navController, currentUser,currentQuizz, backStackEntry)
         }
-        composable(route = AppScreens.TriviaScreen.route) {
+        composable(route = AppScreens.TriviaScreen.route) {backStackEntry ->
             Log.d("FirebaseQuizzRepository", "Quizz details: " + (currentQuizz.getQuizz()?.questions
                 ?: "NO CURRENT QUIZZ"))
-            TriviaScreen(navController) }
+            TriviaScreen(navController, currentQuizz, currentUser, backStackEntry) }
         composable(route = AppScreens.ShopScreen.route) { backStackEntry ->
             ShopScreen(navController, currentUser, backStackEntry) }
         composable(route = AppScreens.ProfileScreen.route) {backStackEntry ->
