@@ -39,4 +39,14 @@ public class Question {
     public void setAnswers(List<Answer> answers) {
         this.answers = answers;
     }
+
+    public int getNumberOfAnswers() {
+        int numberOfAnswers = 0;
+        for (Answer answer: this.answers) {
+            if (answer.isAnswer()) {
+                numberOfAnswers++;
+            }
+        }
+        return numberOfAnswers;
+    }
 }

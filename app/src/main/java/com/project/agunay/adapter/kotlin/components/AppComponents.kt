@@ -662,7 +662,8 @@ fun WalkQuizSquareButtonWithImage(
     contentDescription: String = "",
     width: Dp = 256.dp,
     isAnswer: Boolean = false,
-    showAnswer: Boolean? = false
+    showAnswer: Boolean? = false,
+    isMarked: Boolean = false
 ) {
     val buttonColor: Color
     if (showAnswer == true) {
@@ -674,7 +675,12 @@ fun WalkQuizSquareButtonWithImage(
         }
     }
     else {
-        buttonColor = LightGrey
+        if (isMarked) {
+            buttonColor = Color.Yellow
+        }
+        else {
+            buttonColor = LightGrey
+        }
     }
 
     Button(

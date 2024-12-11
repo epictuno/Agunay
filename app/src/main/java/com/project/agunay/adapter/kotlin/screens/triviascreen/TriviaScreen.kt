@@ -13,6 +13,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,10 +53,11 @@ fun TriviaScreen(
     val currentQuizz = viewModel.currentQuizz.observeAsState()
     val currentUser = viewModel.currentUser.observeAsState()
     val currentQuestion = viewModel.currentQuestion.observeAsState()
+    val markedAnswers = viewModel.markedAnswers.observeAsState()
 
     viewModel.getQuestion()
 
-    BodyContent(navController, currentQuestion.value, currentQuizz.value, viewModel)
+    BodyContent(navController, currentQuestion.value, currentQuizz.value, markedAnswers, viewModel)
     Log.d("QuizDebug", "Pantalla cargada")
 }
 
@@ -64,6 +66,7 @@ fun BodyContent(
     navController: NavHostController,
     currentQuestion: Question?,
     currentQuizz: Quizz?,
+    markedAnswers: State<ArrayList<Boolean>?>?,
     viewModel: TriviaScreenVM?
 ) {
     Scaffold(
@@ -90,14 +93,19 @@ fun BodyContent(
                 icon = R.drawable.shop_object,
                 text = stringResource(R.string.use_object_button),
             )
-            AnswerButtons(question = currentQuestion, viewModel = viewModel)
+            AnswerButtons(question = currentQuestion, viewModel = viewModel, markedAnswers = markedAnswers?.value)
             BottomText()
         }
     }
 }
 
 @Composable
-fun AnswerButtons(modifier: Modifier = Modifier, question: Question?, viewModel: TriviaScreenVM?) {
+fun AnswerButtons(
+    modifier: Modifier = Modifier,
+    question: Question?,
+    viewModel: TriviaScreenVM?,
+    markedAnswers: ArrayList<Boolean>?
+) {
     val buttonWidth = 350.dp
     if (question != null && viewModel != null) {
         val showQuestionAnswers = viewModel.showQuestionAnswers.observeAsState()
@@ -106,39 +114,43 @@ fun AnswerButtons(modifier: Modifier = Modifier, question: Question?, viewModel:
 
         Column {
             WalkQuizSquareButtonWithImage(
-                onClick = { viewModel.checkAnswer(question.answers[0].isAnswer) },
+                onClick = { viewModel.checkAnswer(question.answers[0].isAnswer, 0) },
                 image = R.drawable.option_a,
                 text = question.answers[0].answerText,
                 width = buttonWidth,
                 isAnswer = question.answers[0].isAnswer,
-                showAnswer = showQuestionAnswers.value
+                showAnswer = showQuestionAnswers.value,
+                isMarked = markedAnswers?.get(0) ?: false
             )
             WalkQuizSquareButtonWithImage(
-                onClick = { viewModel.checkAnswer(question.answers[1].isAnswer) },
+                onClick = { viewModel.checkAnswer(question.answers[1].isAnswer, 1) },
                 image = R.drawable.option_b,
                 text = question.answers[1].answerText,
                 width = buttonWidth,
                 isAnswer = question.answers[1].isAnswer,
-                showAnswer = showQuestionAnswers.value
+                showAnswer = showQuestionAnswers.value,
+                isMarked = markedAnswers?.get(1) ?: false
             )
             if (question.answers.size >= 3) {
                 WalkQuizSquareButtonWithImage(
-                    onClick = { viewModel.checkAnswer(question.answers[2].isAnswer) },
+                    onClick = { viewModel.checkAnswer(question.answers[2].isAnswer, 2) },
                     image = R.drawable.option_c,
                     text = question.answers[2].answerText,
                     width = buttonWidth,
                     isAnswer = question.answers[2].isAnswer,
-                    showAnswer = showQuestionAnswers.value
+                    showAnswer = showQuestionAnswers.value,
+                    isMarked = markedAnswers?.get(2) ?: false
                 )
             }
             if (question.answers.size == 4) {
                 WalkQuizSquareButtonWithImage(
-                    onClick = { viewModel.checkAnswer(question.answers[3].isAnswer) },
+                    onClick = { viewModel.checkAnswer(question.answers[3].isAnswer, 3) },
                     image = R.drawable.option_d,
                     text = question.answers[3].answerText,
                     width = buttonWidth,
                     isAnswer = question.answers[3].isAnswer,
-                    showAnswer = showQuestionAnswers.value
+                    showAnswer = showQuestionAnswers.value,
+                    isMarked = markedAnswers?.get(3) ?: false
                 )
             }
         }
@@ -245,5 +257,5 @@ fun TriviaInfoCard(currentQuizz: Quizz?, modifier: Modifier = Modifier) {
 @Composable
 @Preview
 fun TriviaScreenPreview() {
-    BodyContent(rememberNavController(), null, null, null)
+    BodyContent(rememberNavController(), null, null, null, null)
 }

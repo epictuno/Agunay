@@ -29,6 +29,12 @@ class TriviaScreenVM: ViewModel() {
     private val _shuffleAnswers = MutableLiveData<Boolean>(true)
     val shuffleAnswers: LiveData<Boolean?> = _shuffleAnswers
 
+    private val _currentMarkedAnswers = MutableLiveData<Int>(0)
+    val currentMarkedAnswers: LiveData<Int> = _currentMarkedAnswers
+
+    private val _markedAnswers = MutableLiveData<ArrayList<Boolean>>(arrayListOf(false, false, false, false))
+    val markedAnswers: LiveData<ArrayList<Boolean>> = _markedAnswers
+
     fun setCurrentQuiz(quizz: CurrentQuizz) {
         _currentQuizz.value = quizz.getQuizz()
     }
@@ -39,9 +45,7 @@ class TriviaScreenVM: ViewModel() {
 
     fun getQuestion() {
         if (questionAnswered.value == true) {
-            while (_currentQuestion.value == null) {
-                _currentQuestion.value = currentQuizz.value?.questions?.random()
-            }
+            _currentQuestion.value = currentQuizz.value?.questions?.random()
             _questionAnswered.value = false
         }
     }
@@ -53,13 +57,14 @@ class TriviaScreenVM: ViewModel() {
         }
     }
 
-    fun checkAnswer(isAnswer: Boolean) {
+    fun checkAnswer(isAnswer: Boolean, answerNumber: Int) {
         Log.d("QuizDebug", (currentQuestion.value?.questionTitle ?: "") + ": " + isAnswer.toString())
         if (questionAnswered.value == false) {
-            _questionAnswered.value = true
-            _showQuestionAnswers.value = true
 
             if (currentQuestion.value?.questionType == "SingleChoice") {
+                _questionAnswered.value = true
+                _showQuestionAnswers.value = true
+
                 if (isAnswer) {
                     _currentQuizz.value?.correctAnswers = _currentQuizz.value?.correctAnswers?.inc()!!
                     _currentQuizz.value?.correctQuestions?.add(currentQuestion.value)
@@ -69,10 +74,23 @@ class TriviaScreenVM: ViewModel() {
                 }
                 currentQuizz.value?.removeQuestion(currentQuestion.value)
             }
+            else if(currentQuestion.value?.questionType == "MultipleChoice") {
+                if (!isAnswer) {
+                    _questionAnswered.value = true
+                    _showQuestionAnswers.value = true
+                    _currentQuizz.value?.wrongQuestions?.add(currentQuestion.value)
+                    currentQuizz.value?.removeQuestion(currentQuestion.value)
+                }
+                else {
+                    _markedAnswers.value?.set(answerNumber, true)
+                    _currentMarkedAnswers.value = _currentMarkedAnswers.value?.inc()
+                }
+            }
         }
         else {
             _showQuestionAnswers.value = false
             _shuffleAnswers.value = true
+            _markedAnswers.value = arrayListOf(false, false, false, false)
             getQuestion()
         }
     }
