@@ -188,16 +188,16 @@ public class FirebaseUserRepository implements UserRepository {
             int points = document.getLong("points").intValue();
             String profilePictureUrl = document.getString("profilePicture");
             if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
-                profilePictureUrl = "/profilePictures/" + profilePictureUrl;
-                storageRepository.getImageBytes(profilePictureUrl, bytes -> {
+                String profilePictureCompleteUrl = "/profilePictures/" + profilePictureUrl;
+                storageRepository.getImageBytes(profilePictureCompleteUrl, bytes -> {
                     byte[] profilePicture = bytes;
-                    createUserObject(document, email, username, id, points, profilePicture, callback, callError);
+                    createUserObject(document, email, username, id, points, profilePicture,profilePictureUrl, callback, callError);
                 }, error -> {
                     Log.e("documentToUser", "Error al descargar la imagen de perfil: " + error.getMessage());
-                    createUserObject(document, email, username, id, points, null, callback, callError);
+                    createUserObject(document, email, username, id, points,null, profilePictureUrl, callback, callError);
                 });
             } else {
-                createUserObject(document, email, username, id, points, null, callback, callError);
+                createUserObject(document, email, username, id, points, null,profilePictureUrl, callback, callError);
             }
         } catch (Exception e) {
             Log.e("documentToUser", "Error al procesar el usuario: " + e.getMessage());
@@ -205,9 +205,9 @@ public class FirebaseUserRepository implements UserRepository {
         }
     }
 
-    private void createUserObject(DocumentSnapshot document, String email, String username, String id, int points, byte[] profilePicture, SuccessCallback<User> callback, ErrorCallback callError) {
+    private void createUserObject(DocumentSnapshot document, String email, String username, String id, int points, byte[] profilePicture,String profilePictureUrl, SuccessCallback<User> callback, ErrorCallback callError) {
         User user = new User(email, "", username, id, points, new HashSet<>(), new HashMap<>(), profilePicture);
-
+        user.setPictureURL(profilePictureUrl);
         achievementRepository.getAllAchievements(achievements -> {
             List<String> achievementIds = (List<String>) document.get("achievements");
             Set<Achievement> userAchievements = (achievementIds != null) ? achievements.stream()
@@ -245,7 +245,7 @@ public class FirebaseUserRepository implements UserRepository {
         userMap.put("id", user.getId());
         userMap.put("points", user.getPoints());
         userMap.put("email", user.getEmail());
-        userMap.put("profilePicture", user.getProfilePicture());
+        userMap.put("profilePicture", user.getPictureURL());
         userMap.put("username", user.getUsername());
 
         //se guarda la lista de id de los logros obtenidos

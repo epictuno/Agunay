@@ -1,4 +1,4 @@
-package com.example.agunay.ui.theme
+package com.project.agunay.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -14,12 +14,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import com.project.agunay.ui.theme.Pink40
-import com.project.agunay.ui.theme.Pink80
-import com.project.agunay.ui.theme.Purple40
-import com.project.agunay.ui.theme.Purple80
-import com.project.agunay.ui.theme.PurpleGrey40
-import com.project.agunay.ui.theme.PurpleGrey80
+import com.example.agunay.ui.theme.Typography
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,

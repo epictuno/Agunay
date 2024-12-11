@@ -13,6 +13,8 @@ public class User {
     private byte[] profilePicture;
     private String username;
     private String password;
+
+    private String pictureURL;
     public User(String email, String password, String username) {
         this.email = email;
         this.username = username;
@@ -86,5 +88,13 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPictureURL() {
+        return pictureURL;
+    }
+
+    public void setPictureURL(String pictureURL) {
+        this.pictureURL = pictureURL;
     }
 }

@@ -47,6 +47,9 @@ import com.project.agunay.adapter.kotlin.components.WalkQuizTopBar
 import com.project.agunay.adapter.kotlin.configuration.CurrentUser
 import com.project.agunay.domain.Achievement
 import com.project.agunay.domain.User
+import com.project.agunay.ui.theme.PurpleGrey80
+import com.project.agunay.ui.theme.bluesteelColor
+import com.project.agunay.ui.theme.deepBluesteelColor
 
 @Composable
 fun ProfileScreen(
@@ -95,6 +98,7 @@ fun ProfileCard(user: User?) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .width(350.dp)
+                .background(bluesteelColor)
         ) {
             if (user != null) {
                 Image(
@@ -122,26 +126,30 @@ fun ProfileCard(user: User?) {
                 Text(
                     text = user.username,
                     fontSize = 24.sp,
-                    modifier = Modifier.padding(0.dp, 8.dp)
+                    modifier = Modifier.padding(0.dp, 8.dp),
+                    color = Color.White
                 )
             }
             else {
                 Text(
                     text = "Nombre",
                     fontSize = 24.sp,
-                    modifier = Modifier.padding(0.dp, 8.dp)
+                    modifier = Modifier.padding(0.dp, 8.dp),
+                    color = Color.Black
                 )
             }
             if (user != null) {
                 Text(
                     text = stringResource(R.string.points, user.points),
-                    fontSize = 16.sp
+                    fontSize = 20.sp,
+                    color = Color.White
                 )
             }
             else {
                 Text(
                     text = stringResource(R.string.points, 0),
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    color = Color.White
                 )
             }
             AchievementsCard(user)
@@ -154,7 +162,7 @@ fun AchievementsCard(user: User?) {
     val fontSize = 20.sp
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF9B9B9B)
+            containerColor = deepBluesteelColor
         ),
         modifier = Modifier
             .width(250.dp)
@@ -168,7 +176,8 @@ fun AchievementsCard(user: User?) {
             if (user != null) {
                 Text(
                     text = stringResource(R.string.achievements, user.achievements.size, 5),
-                    fontSize = fontSize
+                    fontSize = fontSize,
+                    color = Color.White
                 )
 
                 AchievementList(user.achievements)
@@ -176,7 +185,8 @@ fun AchievementsCard(user: User?) {
             else {
                 Text(
                     text = stringResource(R.string.achievements, 1, 10),
-                    fontSize = fontSize
+                    fontSize = fontSize,
+                    color = Color.White
                 )
                 AchievementList(HashSet<Achievement>())
             }
@@ -206,7 +216,8 @@ fun AchievementInfo(
                 contentDescription = stringResource(R.string.ach_icon)
             )
             Text(
-                text = text
+                text = text,
+                color = Color.White
             )
         }
     }
