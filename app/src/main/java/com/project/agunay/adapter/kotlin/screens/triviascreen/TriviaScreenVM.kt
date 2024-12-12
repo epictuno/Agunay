@@ -85,6 +85,7 @@ class TriviaScreenVM: ViewModel() {
                 else {
                     if (_markedAnswers.value?.get(answerNumber) == false) {
                         _markedAnswers.value?.set(answerNumber, true)
+                        copyMarkedAnswers()
                         _currentMarkedAnswers.value = _currentMarkedAnswers.value?.inc()
                     }
                     if (_currentMarkedAnswers.value == _currentQuestion.value?.numberOfAnswers) {
@@ -104,6 +105,19 @@ class TriviaScreenVM: ViewModel() {
             getQuestion()
         }
     }
+
+    private fun copyMarkedAnswers() {
+        val newList: ArrayList<Boolean> = arrayListOf()
+        for (element in _markedAnswers.value!!) {
+            newList.add(element)
+        }
+        _markedAnswers.value = newList
+    }
+
+    private fun copyCurrentQuestion() {
+        _currentQuestion.value = currentQuestion.value?.copy()
+    }
+
     fun usarItem(item: Map.Entry<ShopItem, Int>) {
         if (item.key.id == "LSMw4NpgEqOTZE9jm5Un") {
             val currentQuestion = _currentQuestion.value
@@ -115,5 +129,13 @@ class TriviaScreenVM: ViewModel() {
                 }
             }
         }
+
+        else if (item.key.id == "iEUn9rQ0uWxxodqscapz") {
+            _currentQuizz.value?.correctAnswers = _currentQuizz.value?.correctAnswers?.inc()!!
+            _currentQuizz.value?.correctQuestions?.add(currentQuestion.value)
+            currentQuizz.value?.removeQuestion(currentQuestion.value)
+            getQuestion()
+        }
+        copyCurrentQuestion()
     }
 }

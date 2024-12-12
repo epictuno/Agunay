@@ -102,7 +102,7 @@ fun BodyContent(
         ) {
             TriviaInfoCard(currentQuizz, Modifier.padding(8.dp))
             QuestionCard(currentQuestion,Modifier.padding(8.dp))
-            showInventory(currentQuestion,currentQuizz,currentUser, viewModel!!)
+            ShowInventory(currentQuestion,currentQuizz,currentUser, viewModel!!)
             AnswerButtons(question = currentQuestion, viewModel = viewModel, markedAnswers = markedAnswers?.value)
             BottomText()
         }
@@ -110,7 +110,7 @@ fun BodyContent(
 }
 
 @Composable
-fun showInventory(currentQuestion: Question?, currentQuizz: Quizz?, currentUser: User?, viewModel: TriviaScreenVM, modifier: Modifier = Modifier) {
+fun ShowInventory(currentQuestion: Question?, currentQuizz: Quizz?, currentUser: User?, viewModel: TriviaScreenVM, modifier: Modifier = Modifier) {
     if (currentUser != null) {
         val inventory = currentUser.inventory.entries.toList()
         var showDialog by remember { mutableStateOf(false) }
@@ -138,7 +138,10 @@ fun showInventory(currentQuestion: Question?, currentQuizz: Quizz?, currentUser:
                             invetoryElement(
                                 shopItem = entry.key,
                                 quantity = entry.value,
-                                onRightButtonClick = { viewModel.usarItem(entry) }
+                                onRightButtonClick = {
+                                    showDialog = false
+                                    viewModel.usarItem(entry)
+                                }
                             )
                         }
                     }

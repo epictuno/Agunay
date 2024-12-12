@@ -49,4 +49,8 @@ public class Question {
         }
         return numberOfAnswers;
     }
+
+    public Question copy() {
+        return new Question(this.questionTitle, this.questionType, this.answers);
+    }
 }
