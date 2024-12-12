@@ -153,6 +153,21 @@ class TriviaScreenVM(
             currentQuizz.value?.removeQuestion(currentQuestion.value)
             getQuestion()
         }
+
+        val user = currentUser.value
+        val inventory = _currentUser.value?.inventory
+        val existingItem = inventory?.entries?.find { it.key.id == item.key.id }
+        inventory?.set(existingItem!!.key, existingItem.value - 1)
+        if (inventory?.get(existingItem!!.key) == 0) {
+            inventory.remove(existingItem!!.key)
+        }
+
+        _currentUser.value!!.inventory = inventory
+        userRepository.updateUser(user, {}, { error ->
+            _error.value = error.message
+        })
+
+
         copyCurrentQuestion()
     }
 
