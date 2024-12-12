@@ -95,18 +95,24 @@ class TriviaScreenVM(
                     _showQuestionAnswers.value = true
                     _currentQuizz.value?.wrongQuestions?.add(currentQuestion.value)
                     currentQuizz.value?.removeQuestion(currentQuestion.value)
+                    _currentMarkedAnswers.value = 0
                 }
                 else {
+
+                    Log.d("QuizDebug", (currentQuestion.value?.questionTitle ?: "") + ": " + _markedAnswers.value?.get(answerNumber).toString())
                     if (_markedAnswers.value?.get(answerNumber) == false) {
                         _markedAnswers.value?.set(answerNumber, true)
                         copyMarkedAnswers()
-                        _currentMarkedAnswers.value = _currentMarkedAnswers.value?.inc()
+                        _currentMarkedAnswers.value = _currentMarkedAnswers.value!! + 1
+                        Log.d("QuizDebug", (currentQuestion.value?.questionTitle ?: "") + ": " + _currentMarkedAnswers.value .toString())
                     }
-                    if (_currentMarkedAnswers.value == _currentQuestion.value?.numberOfAnswers) {
+                    if (_currentMarkedAnswers.value == _currentQuestion.value?.numberOfAnswers!!) {
+                        Log.d("QuizDebug", (currentQuestion.value?.questionTitle ?: "") + ":Size " + _markedAnswers.value?.size.toString())
                         _questionAnswered.value = true
                         _showQuestionAnswers.value = true
                         _currentQuizz.value?.correctAnswers = _currentQuizz.value?.correctAnswers?.inc()!!
                         _currentQuizz.value?.correctQuestions?.add(currentQuestion.value)
+                        _currentMarkedAnswers.value = 0
                         currentQuizz.value?.removeQuestion(currentQuestion.value)
                     }
                 }
