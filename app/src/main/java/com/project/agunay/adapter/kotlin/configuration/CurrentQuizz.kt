@@ -10,7 +10,7 @@ class CurrentQuizz {
     private val _currentQuizz = MutableLiveData<Quizz?>()
     val currentQuizz: LiveData<Quizz?> = _currentQuizz
 
-    fun setQuizz(quizz: Quizz) {
+    fun setQuizz(quizz: Quizz?) {
         _currentQuizz.value = quizz
     }
 

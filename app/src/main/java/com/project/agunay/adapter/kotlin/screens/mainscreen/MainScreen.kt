@@ -49,6 +49,9 @@ fun MainScreen(
     val activity = LocalContext.current as Activity
     val viewModel: MainScreenVM = viewModel(backStackEntry)
     viewModel.setCurrentUser(user)
+    if(quizz.getQuizz()?.questions?.isEmpty() == true){
+        viewModel.clearCompletedQuizz()
+    }
 
     val currentUser by viewModel.currentUser.observeAsState()
 

@@ -6,13 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.project.agunay.adapter.firebase.ErrorCallback
 import com.project.agunay.adapter.firebase.FirebaseQuizzRepository
-import com.project.agunay.adapter.firebase.FirebaseShopItemRepository
 import com.project.agunay.adapter.firebase.FirebaseUserRepository
 import com.project.agunay.adapter.firebase.SuccessCallback
 import com.project.agunay.adapter.kotlin.configuration.CurrentQuizz
 import com.project.agunay.adapter.kotlin.configuration.CurrentUser
 import com.project.agunay.application.repository.QuizzRepository
-import com.project.agunay.application.repository.ShopItemRepository
 import com.project.agunay.application.repository.UserRepository
 import com.project.agunay.domain.Quizz
 import com.project.agunay.domain.User
@@ -60,6 +58,10 @@ class MainScreenVM(
                 }
             }
         )
+    }
+
+    fun clearCompletedQuizz(){
+        _currentQuizz.value = null
     }
 
     fun resetTriviaActionTrigger() {

@@ -4,12 +4,19 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.project.agunay.adapter.kotlin.configuration.CurrentQuizz
 import com.project.agunay.adapter.kotlin.configuration.CurrentUser
+import com.project.agunay.adapter.kotlin.navigation.AppScreens
 import com.project.agunay.domain.Question
 import com.project.agunay.domain.Quizz
 import com.project.agunay.domain.ShopItem
 import com.project.agunay.domain.User
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class TriviaScreenVM: ViewModel() {
     private val _currentQuizz = MutableLiveData<Quizz?>()
@@ -17,6 +24,9 @@ class TriviaScreenVM: ViewModel() {
 
     private val _currentUser = MutableLiveData<User?>()
     val currentUser: LiveData<User?> = _currentUser
+
+    private val _currentNavController = MutableLiveData<NavController?>()
+    val currentNavController: LiveData<NavController?> = _currentNavController
 
     private val _currentQuestion = MutableLiveData<Question>()
     val currentQuestion: LiveData<Question?> = _currentQuestion
@@ -44,10 +54,19 @@ class TriviaScreenVM: ViewModel() {
         _currentUser.postValue(user.getUser())
     }
 
+    fun setNavController(nav: NavController) {
+        _currentNavController.postValue(nav)
+    }
+
     fun getQuestion() {
         if (questionAnswered.value == true) {
-            _currentQuestion.value = currentQuizz.value?.questions?.random()
-            _questionAnswered.value = false
+            if(currentQuizz.value!!.questions!!.size > 0) {
+                _currentQuestion.value = currentQuizz.value?.questions?.random()
+                _questionAnswered.value = false
+            }
+            else{
+                //_currentNavController.value?.navigate(route = AppScreens.MainScreen.route)
+            }
         }
     }
 
@@ -115,5 +134,9 @@ class TriviaScreenVM: ViewModel() {
                 }
             }
         }
+    }
+
+    fun giveAchiToUser(){
+
     }
 }

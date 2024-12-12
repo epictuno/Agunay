@@ -62,7 +62,7 @@ fun TriviaScreen(
 
     viewModel.setCurrentUser(user)
     viewModel.setCurrentQuiz(quizz)
-
+    viewModel.setNavController(navController)
     val currentQuizz = viewModel.currentQuizz.observeAsState()
     val currentUser = viewModel.currentUser.observeAsState()
     val currentQuestion = viewModel.currentQuestion.observeAsState()
