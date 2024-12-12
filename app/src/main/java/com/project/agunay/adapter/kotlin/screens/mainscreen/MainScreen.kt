@@ -38,6 +38,7 @@ import com.project.agunay.adapter.kotlin.components.WalkQuizSquareButtonWithIcon
 import com.project.agunay.adapter.kotlin.configuration.CurrentQuizz
 import com.project.agunay.adapter.kotlin.configuration.CurrentUser
 import com.project.agunay.adapter.kotlin.navigation.AppScreens
+import kotlin.random.Random
 
 @Composable
 fun MainScreen(
@@ -85,6 +86,7 @@ fun MainScreenButtons(navController: NavController, viewModel: MainScreenVM, qui
     val currentQuizz by viewModel.currentQuizz.observeAsState()
     val isLoading by viewModel.isLoading.observeAsState(false)
     var triviaButtonPressed by remember { mutableStateOf(false) }
+    val quizNames = listOf("Generic", "Wintendo")
     if (isLoading) {
         Box(
             contentAlignment = Alignment.Center,
@@ -106,7 +108,7 @@ fun MainScreenButtons(navController: NavController, viewModel: MainScreenVM, qui
             onClick = {
                 if (!isLoading) {
                     triviaButtonPressed = true
-                    if(currentQuizz==null){viewModel.setCurrentQuizz("Generic",quizz)}
+                    if(currentQuizz==null){viewModel.setCurrentQuizz(quizNames[Random.nextInt(quizNames.size)],quizz)}
                     Log.d("dafuq?", (currentQuizz!=null).toString())
                 }
             },

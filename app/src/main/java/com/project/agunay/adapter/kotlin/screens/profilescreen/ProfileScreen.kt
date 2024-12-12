@@ -234,7 +234,6 @@ fun AchievementList(
             AchievementCard(achievement)
         }
     }
-    //Implementar que los elementos AchievementInfo se creen a partir de una lista de logros
 }
 
 @Composable

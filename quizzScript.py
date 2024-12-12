@@ -9,7 +9,452 @@ def guardar_cuestionario(cuestionario):
     doc_ref = db.collection(collection_name).document(cuestionario['name'])
     doc_ref.set(cuestionario)
     print(f"Cuestionario {cuestionario['name']} guardado exitosamente")
-
+cuestionarioMChoice = {
+    "name": "Wintendo",
+    "language": "ES",
+    "questions": [
+            {
+                "questionTitle": "Selecciona los personajes que aparecen en Super Smash Bros. Ultimate:",
+                "questionType": "MultipleChoice",
+                "answers": [
+                    {
+                        "isAnswer": True,
+                        "answerText": "Mario"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "Link"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Master Chief"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "Pikachu"
+                    }
+                ]
+            },
+            {
+                "questionTitle": "Selecciona los juegos desarrollados por Nintendo:",
+                "questionType": "MultipleChoice",
+                "answers": [
+                    {
+                        "isAnswer": True,
+                        "answerText": "The Legend of Zelda: Breath of the Wild"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Halo Infinite"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "Animal Crossing: New Horizons"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "God of War"
+                    }
+                ]
+            },
+            {
+                "questionTitle": "Selecciona las consolas lanzadas por Nintendo:",
+                "questionType": "MultipleChoice",
+                "answers": [
+                    {
+                        "isAnswer": True,
+                        "answerText": "Nintendo Switch"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "PlayStation 5"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "Nintendo 3DS"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Xbox Series X"
+                    }
+                ]
+            },
+            {
+                "questionTitle": "Selecciona los personajes de la serie The Legend of Zelda:",
+                "questionType": "MultipleChoice",
+                "answers": [
+                    {
+                        "isAnswer": True,
+                        "answerText": "Link"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "Zelda"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Samus"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "Ganondorf"
+                    }
+                ]
+            },
+            {
+                "questionTitle": "Selecciona los juegos que pertenecen a la serie Mario Kart:",
+                "questionType": "MultipleChoice",
+                "answers": [
+                    {
+                        "isAnswer": True,
+                        "answerText": "Mario Kart 8 Deluxe"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "Mario Kart Tour"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Gran Turismo 7"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "Mario Kart DS"
+                    }
+                ]
+            },
+            {
+                "questionTitle": "Selecciona los juegos que incluyen a Pikachu como personaje jugable:",
+                "questionType": "MultipleChoice",
+                "answers": [
+                    {
+                        "isAnswer": True,
+                        "answerText": "Pokémon Sword and Shield"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "Super Smash Bros. Ultimate"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Digimon Story: Cyber Sleuth"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "Pokémon Let's Go, Pikachu!"
+                    }
+                ]
+            },
+            {
+                "questionTitle": "Selecciona los juegos que son exclusivos de Nintendo Switch:",
+                "questionType": "MultipleChoice",
+                "answers": [
+                    {
+                        "isAnswer": True,
+                        "answerText": "Splatoon 3"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "The Legend of Zelda: Breath of the Wild"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Horizon Zero Dawn"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "Super Mario Odyssey"
+                    }
+                ]
+            },
+            {
+                "questionTitle": "Selecciona los personajes que aparecen en Animal Crossing: New Horizons:",
+                "questionType": "MultipleChoice",
+                "answers": [
+                    {
+                        "isAnswer": True,
+                        "answerText": "Tom Nook"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "Isabelle"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Kratos"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "Blathers"
+                    }
+                ]
+            },
+            {
+                "questionTitle": "Selecciona los juegos que pertenecen a la serie Metroid:",
+                "questionType": "MultipleChoice",
+                "answers": [
+                    {
+                        "isAnswer": True,
+                        "answerText": "Metroid Dread"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "Metroid Prime"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Halo 3"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "Metroid Fusion"
+                    }
+                ]
+            },
+            {
+                "questionTitle": "Selecciona los juegos que incluyen a Kirby como personaje principal:",
+                "questionType": "MultipleChoice",
+                "answers": [
+                    {
+                        "isAnswer": True,
+                        "answerText": "Kirby Star Allies"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "Kirby's Dream Land"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Sonic the Hedgehog"
+                    },
+                    {
+                        "isAnswer": True,
+                        "answerText": "Kirby and the Forgotten Land"
+                    }
+                ]
+            },
+            {
+                "questionTitle": "¿Quién es el creador de Super Mario?",
+                "questionType": "SingleChoice",
+                "answers": [
+                    {
+                        "isAnswer": True,
+                        "answerText": "Shigeru Miyamoto"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Hideo Kojima"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Satoru Iwata"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Masahiro Sakurai"
+                    }
+                ]
+            },
+            {
+                "questionTitle": "¿Cuál es la consola más reciente de Nintendo?",
+                "questionType": "SingleChoice",
+                "answers": [
+                    {
+                        "isAnswer": True,
+                        "answerText": "Nintendo Switch"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Nintendo Wii U"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Nintendo 3DS"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Nintendo DS"
+                    }
+                ]
+            },
+            {
+                "questionTitle": "¿Cuál es el nombre del villano principal en la serie The Legend of Zelda?",
+                "questionType": "SingleChoice",
+                "answers": [
+                    {
+                        "isAnswer": True,
+                        "answerText": "Ganondorf"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Bowser"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Ridley"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "King Dedede"
+                    }
+                ]
+            },
+            {
+                "questionTitle": "¿Cuál es el juego más vendido de Nintendo Switch?",
+                "questionType": "SingleChoice",
+                "answers": [
+                    {
+                        "isAnswer": True,
+                        "answerText": "Mario Kart 8 Deluxe"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "The Legend of Zelda: Breath of the Wild"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Animal Crossing: New Horizons"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Super Smash Bros. Ultimate"
+                    }
+                ]
+            },
+            {
+                "questionTitle": "¿Cuál es el nombre del protagonista en la serie Metroid?",
+                "questionType": "SingleChoice",
+                "answers": [
+                    {
+                        "isAnswer": True,
+                        "answerText": "Samus Aran"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Link"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Mario"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Donkey Kong"
+                    }
+                ]
+            },
+            {
+                "questionTitle": "¿Cuál es el nombre del juego de construcción y gestión de islas de Nintendo?",
+                "questionType": "SingleChoice",
+                "answers": [
+                    {
+                        "isAnswer": True,
+                        "answerText": "Animal Crossing: New Horizons"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Stardew Valley"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "Harvest Moon"
+                    },
+                    {
+                        "isAnswer": False,
+                        "answerText": "The Sims"
+                    }
+                ]
+            },
+            {
+                    "questionTitle": "¿Cuál es el nombre del juego de disparos en tercera persona exclusivo de Nintendo?",
+                    "questionType": "SingleChoice",
+                    "answers": [
+                        {
+                            "isAnswer": True,
+                            "answerText": "Splatoon 3"
+                        },
+                        {
+                            "isAnswer": False,
+                            "answerText": "Call of Duty"
+                        },
+                        {
+                            "isAnswer": False,
+                            "answerText": "Overwatch"
+                        },
+                        {
+                            "isAnswer": False,
+                            "answerText": "Fortnite"
+                        }
+                    ]
+                },
+                {
+                    "questionTitle": "¿Cuál es el nombre del juego de aventuras protagonizado por Link?",
+                    "questionType": "SingleChoice",
+                    "answers": [
+                        {
+                            "isAnswer": True,
+                            "answerText": "The Legend of Zelda: Breath of the Wild"
+                        },
+                        {
+                            "isAnswer": False,
+                            "answerText": "Super Mario Odyssey"
+                        },
+                        {
+                            "isAnswer": False,
+                            "answerText": "Metroid Dread"
+                        },
+                        {
+                            "isAnswer": False,
+                            "answerText": "Fire Emblem: Three Houses"
+                        }
+                    ]
+                },
+                {
+                    "questionTitle": "¿Cuál es el nombre del juego de lucha que incluye personajes de múltiples franquicias de Nintendo?",
+                    "questionType": "SingleChoice",
+                    "answers": [
+                        {
+                            "isAnswer": True,
+                            "answerText": "Super Smash Bros. Ultimate"
+                        },
+                        {
+                            "isAnswer": False,
+                            "answerText": "Street Fighter V"
+                        },
+                        {
+                            "isAnswer": False,
+                            "answerText": "Tekken 7"
+                        },
+                        {
+                            "isAnswer": False,
+                            "answerText": "Mortal Kombat 11"
+                        }
+                    ]
+                },
+                {
+                    "questionTitle": "¿Cuál es el nombre del juego de plataformas protagonizado por Mario?",
+                    "questionType": "SingleChoice",
+                    "answers": [
+                        {
+                            "isAnswer": True,
+                            "answerText": "Super Mario Odyssey"
+                        },
+                        {
+                            "isAnswer": False,
+                            "answerText": "Sonic Mania"
+                        },
+                        {
+                            "isAnswer": False,
+                            "answerText": "Crash Bandicoot N. Sane Trilogy"
+                        },
+                        {
+                            "isAnswer": False,
+                            "answerText": "Rayman Legends"
+                        }
+                    ]
+                }
+    ]
+}
 # Ejemplo de uso
 cuestionario = {
     "name": "Generic",
@@ -651,4 +1096,4 @@ cuestionario = {
         }
     ]
 }
-guardar_cuestionario(cuestionario)
+guardar_cuestionario(cuestionarioMChoice)

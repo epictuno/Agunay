@@ -63,7 +63,10 @@ public class FirebaseUserRepository implements UserRepository {
 
             auth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword()).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
+                    ArrayList<String> achievementsArray = new ArrayList<String>();
+                    achievementsArray.add("JrwrFBKH5P7GSqHR3ueZ");
                     FirebaseUser firebaseUser = task.getResult().getUser();
+
                     if (firebaseUser != null) {
                         Map<String, Object> userMap = new HashMap<>();
                         userMap.put("id", firebaseUser.getUid());
@@ -72,7 +75,7 @@ public class FirebaseUserRepository implements UserRepository {
                         userMap.put("inventory", new ArrayList<Achievement>());
                         userMap.put("profilePicture", null);
                         userMap.put("username", user.getUsername());
-                        userMap.put("achievements", new ArrayList<String>());
+                        userMap.put("achievements", achievementsArray);
 
                         db.collection("users").document(firebaseUser.getUid()).set(userMap)
                                 .addOnCompleteListener(setTask -> {
