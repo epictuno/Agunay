@@ -4,29 +4,27 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import com.project.agunay.adapter.firebase.FirebaseAchievementRepository
+import com.project.agunay.adapter.firebase.FirebaseUserRepository
 import com.project.agunay.adapter.kotlin.configuration.CurrentQuizz
 import com.project.agunay.adapter.kotlin.configuration.CurrentUser
-import com.project.agunay.adapter.kotlin.navigation.AppScreens
+import com.project.agunay.application.repository.AchievementRepository
+import com.project.agunay.application.repository.UserRepository
 import com.project.agunay.domain.Question
 import com.project.agunay.domain.Quizz
 import com.project.agunay.domain.ShopItem
 import com.project.agunay.domain.User
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
-class TriviaScreenVM: ViewModel() {
+class TriviaScreenVM(
+    private val achiRepository: AchievementRepository = FirebaseAchievementRepository(),
+    private val userRepository: UserRepository = FirebaseUserRepository()
+
+    ): ViewModel() {
     private val _currentQuizz = MutableLiveData<Quizz?>()
     val currentQuizz: LiveData<Quizz?> = _currentQuizz
 
     private val _currentUser = MutableLiveData<User?>()
     val currentUser: LiveData<User?> = _currentUser
-
-    private val _currentNavController = MutableLiveData<NavController?>()
-    val currentNavController: LiveData<NavController?> = _currentNavController
 
     private val _currentQuestion = MutableLiveData<Question>()
     val currentQuestion: LiveData<Question?> = _currentQuestion
@@ -46,6 +44,9 @@ class TriviaScreenVM: ViewModel() {
     private val _markedAnswers = MutableLiveData<ArrayList<Boolean>>(arrayListOf(false, false, false, false))
     val markedAnswers: LiveData<ArrayList<Boolean>> = _markedAnswers
 
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> get() = _error
+
     fun setCurrentQuiz(quizz: CurrentQuizz) {
         _currentQuizz.value = quizz.getQuizz()
     }
@@ -54,19 +55,10 @@ class TriviaScreenVM: ViewModel() {
         _currentUser.postValue(user.getUser())
     }
 
-    fun setNavController(nav: NavController) {
-        _currentNavController.postValue(nav)
-    }
-
     fun getQuestion() {
         if (questionAnswered.value == true) {
-            if(currentQuizz.value!!.questions!!.size > 0) {
-                _currentQuestion.value = currentQuizz.value?.questions?.random()
-                _questionAnswered.value = false
-            }
-            else{
-                //_currentNavController.value?.navigate(route = AppScreens.MainScreen.route)
-            }
+            _currentQuestion.value = currentQuizz.value?.questions?.random()
+            _questionAnswered.value = false
         }
     }
 
@@ -104,6 +96,7 @@ class TriviaScreenVM: ViewModel() {
                 else {
                     if (_markedAnswers.value?.get(answerNumber) == false) {
                         _markedAnswers.value?.set(answerNumber, true)
+                        copyMarkedAnswers()
                         _currentMarkedAnswers.value = _currentMarkedAnswers.value?.inc()
                     }
                     if (_currentMarkedAnswers.value == _currentQuestion.value?.numberOfAnswers) {
@@ -120,9 +113,28 @@ class TriviaScreenVM: ViewModel() {
             _showQuestionAnswers.value = false
             _shuffleAnswers.value = true
             _markedAnswers.value = arrayListOf(false, false, false, false)
+            if (_currentQuizz.value!!.correctAnswers == 1) {
+                hasAchievement("nXoRcxFgkxwNnZXLSNpv")
+            }
+            else if (_currentQuizz.value!!.correctAnswers == 10) {
+                hasAchievement("3nf63xRmaPtQR6m71xt0")
+            }
             getQuestion()
         }
     }
+
+    private fun copyMarkedAnswers() {
+        val newList: ArrayList<Boolean> = arrayListOf()
+        for (element in _markedAnswers.value!!) {
+            newList.add(element)
+        }
+        _markedAnswers.value = newList
+    }
+
+    private fun copyCurrentQuestion() {
+        _currentQuestion.value = currentQuestion.value?.copy()
+    }
+
     fun usarItem(item: Map.Entry<ShopItem, Int>) {
         if (item.key.id == "LSMw4NpgEqOTZE9jm5Un") {
             val currentQuestion = _currentQuestion.value
@@ -134,9 +146,43 @@ class TriviaScreenVM: ViewModel() {
                 }
             }
         }
+
+        else if (item.key.id == "iEUn9rQ0uWxxodqscapz") {
+            _currentQuizz.value?.correctAnswers = _currentQuizz.value?.correctAnswers?.inc()!!
+            _currentQuizz.value?.correctQuestions?.add(currentQuestion.value)
+            currentQuizz.value?.removeQuestion(currentQuestion.value)
+            getQuestion()
+        }
+
+        val user = currentUser.value
+        val inventory = _currentUser.value?.inventory
+        val existingItem = inventory?.entries?.find { it.key.id == item.key.id }
+        inventory?.set(existingItem!!.key, existingItem.value - 1)
+        if (inventory?.get(existingItem!!.key) == 0) {
+            inventory.remove(existingItem!!.key)
+        }
+
+        _currentUser.value!!.inventory = inventory
+        userRepository.updateUser(user, {}, { error ->
+            _error.value = error.message
+        })
+
+
+        copyCurrentQuestion()
     }
 
-    fun giveAchiToUser(){
-
+    private fun hasAchievement(id: String) {
+        val user = _currentUser.value
+        val userHasAchievement = user?.achievements?.any { it.id == id }
+        if (!userHasAchievement!!) {
+            achiRepository.getAchievementById(id, { achievement ->
+                user.achievements.add(achievement)
+                userRepository.updateUser(user, {}, { error ->
+                    _error.value = error.message
+                })
+            }, { error ->
+                _error.value = error.message
+            })
+        }
     }
 }
