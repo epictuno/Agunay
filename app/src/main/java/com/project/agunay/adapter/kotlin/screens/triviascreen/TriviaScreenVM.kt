@@ -56,9 +56,12 @@ class TriviaScreenVM(
     }
 
     fun getQuestion() {
-        if (questionAnswered.value == true) {
+        if (questionAnswered.value == true && (_currentQuizz.value?.questions?.isEmpty() == false)) {
             _currentQuestion.value = currentQuizz.value?.questions?.random()
             _questionAnswered.value = false
+        }
+        else{
+
         }
     }
 
