@@ -35,7 +35,7 @@ class registerScreenVM(
 
                     _currentUser.postValue(result)
 
-                    Log.d("CreateUser", "Usuario creado: " + result.username)
+                    Log.d("CreateUser", "Usuario creado: " + result.id)
                 } else {
                     _isLoading.postValue(false)
                     _error.postValue("Error al crear el usuario")

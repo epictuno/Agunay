@@ -80,13 +80,15 @@ public class FirebaseUserRepository implements UserRepository {
                         db.collection("users").document(firebaseUser.getUid()).set(userMap)
                                 .addOnCompleteListener(setTask -> {
                                     if (setTask.isSuccessful()) {
-                                        callback.onComplete(user);
+                                        Log.d("documentToShopItem", "registrado");
+                                        this.getUserByEmail(user.getEmail(),callback,callError);
                                     } else {
                                         callback.onComplete(null);
                                     }
                                 });
                     } else {
-                        callback.onComplete(user);
+                        Log.d("documentToShopItem", "registrado pero algo else");
+                        this.getUserByEmail(user.getEmail(),callback,callError);
                     }
                 } else {
                     callback.onComplete(null);

@@ -83,12 +83,12 @@ fun BodyContent(
         )
         Spacer(modifier = Modifier.height(32.dp))
 
-        RegistrationScreen(viewModel = userViewModel, navController = navController)
+        RegistrationScreen(viewModel = userViewModel, navController = navController,currentAppUser = currentUser)
     }
 }
 
 @Composable
-fun RegistrationScreen(viewModel: registerScreenVM, navController: NavController) {
+fun RegistrationScreen(viewModel: registerScreenVM, navController: NavController,currentAppUser: CurrentUser) {
     var username by remember { mutableStateOf("") }
     var usernameError by remember { mutableStateOf<String?>(null) }
     var password by remember { mutableStateOf("") }
@@ -211,6 +211,7 @@ fun RegistrationScreen(viewModel: registerScreenVM, navController: NavController
         )
         LaunchedEffect(currentUser) {
             currentUser?.let {
+                currentAppUser.setUser(currentUser!!)
                 navController.navigate(route = AppScreens.MainScreen.route)
             }
         }
